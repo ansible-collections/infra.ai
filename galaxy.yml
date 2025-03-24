@@ -1,12 +1,12 @@
 ---
 # See https://docs.ansible.com/ansible/latest/dev_guide/collections_galaxy_meta.html
 
-namespace: community
-name: FIXME
+namespace: ai
+name: infra_ops
 version: 0.1.0
 readme: README.md
 authors:
-  - YOUR NAME (github.com/YOURGITHUB)
+  - Peter Grlica (github.com/petergrlica)
 description: null
 license_file: LICENSE
 tags:
