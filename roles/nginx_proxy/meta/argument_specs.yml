@@ -1,0 +1,24 @@
+---
+argument_specs:
+  main:
+    version_added: 1.0.0
+    short_description: A role to create nginx reverse proxy with optional Letsencrypt TLS certificates.
+    description:
+      - A role to create nginx reverse proxy with optional Letsencrypt TLS certificates.
+    options:
+      nginx_proxy_fqdn:
+        type: str
+        description:
+          - Domain name for the nginx reverse proxy, used for self-signed certificate generation.
+        required: true
+      nginx_proxy_install_dir:
+        type: str
+        description:
+          - Directory to install nginx reverse proxy and podman compose to.
+        required: true
+      nginx_proxy_tls_organization_name:
+        type: str
+        description:
+          - Organization name for the self-signed certificate.
+        required: false
+        default: Example Organization

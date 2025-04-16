@@ -1,0 +1,46 @@
+services:
+  nginx-proxy:
+    image: docker.io/nginxproxy/nginx-proxy
+    container_name: nginx-proxy
+    restart: always
+    network_mode: "host"
+    environment:
+      - DEFAULT_HOST=example.com
+      # - LETSENCRYPT_HOST={{ nginx_proxy_fqdn }}
+      # - VIRTUAL_HOST={{ nginx_proxy_fqdn }}
+    volumes:
+      - /run/user/1000/podman/podman.sock:/tmp/docker.sock:z
+      - vhost:/etc/nginx/vhost.d
+      - html:/usr/share/nginx/html
+      - ./certs:/etc/nginx/certs
+      - ./rhelai.conf:/etc/nginx/conf.d/rhelai.conf:ro
+    security_opt:
+      - label=disable
+
+  letsencrypt:
+    image: docker.io/nginxproxy/acme-companion
+    container_name: letsencrypt
+    restart: always
+    volumes:
+      - /run/user/1000/podman/podman.sock:/var/run/docker.sock:z
+      - acme:/etc/acme.sh
+      - ./certs:/etc/nginx/certs:rw
+      - vhost:/etc/nginx/vhost.d:rw
+      - html:/usr/share/nginx/html:rw
+    environment:
+      - NGINX_PROXY_CONTAINER=nginx-proxy
+    security_opt:
+      - label=disable
+
+  # nginx:
+  #   image: nginx:alpine
+  #   container_name: nginx
+  #   restart: always
+  #   environment:
+  #     - VIRTUAL_HOST={{ nginx_proxy_fqdn }}
+  #     - LETSENCRYPT_HOST={{ nginx_proxy_fqdn }}
+
+volumes:
+  acme:
+  html:
+  vhost:

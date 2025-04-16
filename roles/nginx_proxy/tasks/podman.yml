@@ -1,0 +1,81 @@
+---
+- name: Install Podman using dnf
+  become: true
+  ansible.builtin.dnf:
+    name: podman
+    state: present
+    use_backend: dnf4
+
+- name: Start and enable podman service
+  ansible.builtin.systemd_service:
+    name: podman.socket
+    state: started
+    scope: user
+    enabled: true
+
+- name: Create podman compose file
+  ansible.builtin.template:
+    src: podman-compose.yml.j2
+    dest: "{{ nginx_proxy_install_dir }}/podman-compose.yml"
+    mode: '0640'
+
+- name: Create host nginx config file
+  ansible.builtin.template:
+    src: rhelai.conf.j2
+    dest: "{{ nginx_proxy_install_dir }}/rhelai.conf"
+    mode: '0640'
+
+# - name: Run temp nginx container
+#   containers.podman.podman_container:
+#     name: web-server
+#     image: docker.io/library/nginx:latest
+#     state: started
+#     restart_policy: always
+#     env:
+#       VIRTUAL_HOST: example.tld
+
+# - name: Run nginx reverse proxy container
+#   containers.podman.podman_container:
+#     name: reverse-proxy
+#     image: docker.io/nginxproxy/nginx-proxy:1.7
+#     state: started
+#     restart_policy: always
+#     security_opt:
+#       - label=disable
+#     ports:
+#       - "8080:80"
+#     volumes:
+#       - "/run/user/1000/podman/podman.sock:/tmp/docker.sock:z"
+
+- name: Set sysctl for unprivileged ports
+  become: true
+  ansible.posix.sysctl:
+    name: net.ipv4.ip_unprivileged_port_start
+    value: '80'
+    sysctl_set: true
+    state: present
+    reload: true
+
+- name: Validate podman compose file
+  ansible.builtin.command:
+    cmd: "{{ nginx_proxy_install_dir }}/.local/bin/podman-compose -f {{ nginx_proxy_install_dir }}/podman-compose.yml config"
+  register: podman_compose_config
+  changed_when: false
+
+- name: Run the podman compose file in detached mode
+  ansible.builtin.command:
+    cmd: "{{ nginx_proxy_install_dir }}/.local/bin/podman-compose -f {{ nginx_proxy_install_dir }}/podman-compose.yml up -d"
+  register: podman_compose_up
+  changed_when: podman_compose_up.rc != 0
+
+- name: Debug the connection locally by curling the host
+  ansible.builtin.uri:
+    url: "https://{{ inventory_hostname }}"
+    follow_redirects: none
+    method: GET
+    headers:
+      Host: "{{ nginx_proxy_fqdn }}"
+  register: _result
+  until: _result.status == 200
+  retries: 3
+  delay: 5

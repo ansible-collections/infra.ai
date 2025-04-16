@@ -1,0 +1,26 @@
+---
+- name: Ensure certs directory exists
+  ansible.builtin.file:
+    path: ./certs
+    state: directory
+    mode: '0755'
+
+- name: Create private key (RSA, 4096 bits)
+  community.crypto.openssl_privatekey:
+    path: ./certs/certificate.key
+
+- name: Create certificate signing request (CSR) for self-signed certificate
+  community.crypto.openssl_csr_pipe:
+    privatekey_path: ./certs/certificate.key
+    common_name: "{{ nginx_proxy_fqdn }}"
+    organization_name: "{{ nginx_proxy_tls_organization_name }}"
+    subject_alt_name:
+      - "DNS:{{ nginx_proxy_fqdn }}"
+  register: csr
+
+- name: Create self-signed certificate from CSR
+  community.crypto.x509_certificate:
+    path: ./certs/certificate.pem
+    csr_content: "{{ csr.csr }}"
+    privatekey_path: ./certs/certificate.key
+    provider: selfsigned
