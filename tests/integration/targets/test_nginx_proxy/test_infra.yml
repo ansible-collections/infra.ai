@@ -1,0 +1,104 @@
+---
+- name: Test infrastructure connectivity
+  hosts: localhost
+  gather_facts: false
+  module_defaults:
+    group/aws:
+      region: "{{ aws_region | default(lookup('ansible.builtin.env', 'AWS_REGION')) }}"
+      aws_access_key: "{{ aws_access_key | default(lookup('ansible.builtin.env', 'AWS_ACCESS_KEY')) }}"
+      aws_secret_key: "{{ aws_secret_key | default(lookup('ansible.builtin.env', 'AWS_SECRET_KEY')) }}"
+
+  tasks:
+    - name: Pre-provisioning tests
+      when: action == "pre"
+      block:
+        - name: Instance exists
+          amazon.aws.ec2_instance_info:
+            filters:
+              "tag:Name": "{{ rhelai_aws_resource_name }}-instance"
+              instance-state-name: ["running"]
+          register: ec2_info_result
+
+        - name: Check if instance is running
+          ansible.builtin.assert:
+            that:
+              - ec2_info_result.instances | length == 0
+
+        - name: Check for vpc
+          amazon.aws.ec2_vpc_net_info:
+            filters:
+              "tag:Name": "{{ rhelai_aws_resource_name }}-vpc"
+              state: ["available"]
+          register: vpc_info_result
+
+        - name: Check if vpc is created
+          ansible.builtin.assert:
+            that:
+              - vpc_info_result.vpcs | length == 0
+
+    - name: Post-provisioning tests
+      when: action == "post"
+      block:
+
+        - name: Check for vpc
+          amazon.aws.ec2_vpc_net_info:
+            filters:
+              "tag:Name": "{{ rhelai_aws_resource_name }}-vpc"
+              state: ["available"]
+          register: vpc_info_result
+
+        - name: Check if vpc is created
+          ansible.builtin.assert:
+            that:
+              - vpc_info_result.vpcs | length != 0
+              - vpc_info_result.vpcs[0].state == "available"
+              - vpc_info_result.vpcs[0].cidr_block == rhelai_aws_vpc_cidr
+
+        - name: Fetch instance info
+          amazon.aws.ec2_instance_info:
+            filters:
+              "tag:Name": "{{ rhelai_aws_resource_name }}-instance"
+              instance-state-name: ["running"]
+          register: ec2_info_result
+
+        - name: Validate instance
+          ansible.builtin.assert:
+            that:
+              - ec2_info_result.instances | length != 0
+              - ec2_info_result.instances[0].state.name == "running"
+              - ec2_info_result.instances[0].vpc_id == vpc_info_result.vpcs[0].vpc_id
+              - ec2_info_result.instances[0].instance_type == rhelai_aws_instance_type
+              - ec2_info_result.instances[0].image_id == rhelai_aws_rhelai_ami
+
+        - name: Set port whitelist
+          ansible.builtin.set_fact:
+            my_dict:
+              22: open
+              # 80: open
+              81: closed
+              8000: closed
+
+        - name: Wait for ports
+          ansible.builtin.wait_for:
+            host: "{{ ec2_info_result.instances[0].public_dns_name }}"
+            port: "{{ item }}"
+            timeout: 5
+          with_items: "{{ my_dict }}"
+          ignore_errors: true
+          register: port_statuses
+          when: >
+            ec2_info_result.instances[0].public_dns_name is defined and
+            ec2_info_result.instances[0].public_dns_name != ""
+
+        - name: Check for availability of ports
+          ansible.builtin.assert:
+            that:
+              - >
+                (
+                  (item.item in my_dict and my_dict[item.item] == 'open' and not item.failed) or
+                  (item.item in my_dict and my_dict[item.item] == 'closed' and item.failed)
+                )
+          with_items: "{{ port_statuses.results }}"
+          when: >
+            ec2_info_result.instances[0].public_dns_name is defined and
+            ec2_info_result.instances[0].public_dns_name != ""

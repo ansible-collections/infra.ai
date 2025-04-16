@@ -1,34 +1,57 @@
-# ai.infra_ops Content Collection
+# infra.ai Content Collection
 <!-- Add CI and code coverage badges here. Samples included below. -->
 [![CI](https://github.com/ansible-collections/REPONAMEHERE/workflows/CI/badge.svg?event=push)](https://github.com/ansible-collections/REPONAMEHERE/actions) [![Codecov](https://img.shields.io/codecov/c/github/ansible-collections/REPONAMEHERE)](https://codecov.io/gh/ansible-collections/REPONAMEHERE)
 
 ## Description
 This collection is curated to provide users with a robust set of roles, playbooks, and rulebooks that simplify and streamline AWS infrastructure operations related to RHEL AI.
 
-# Usage
+## Installation
 
-## Setting up aws-related key settings
-
-.This is temporary for now, set your dev env like:
 ```shell
-export AWS_ACCESS_KEY_ID=...
-export AWS_SECRET_ACCESS_KEY=...
-export AWS_REGION=eu-west-1
+$ ansible-galaxy collection install -r requirements.yml
 ```
 
-## Dev orchestration and teardown
+## Usage
+
+### Setting up aws-related settings
+
+Set your dev env:
+```shell
+# using the "default" profile on AWS
+aws configure set aws_access_key_id     my-access-key
+aws configure set aws_secret_access_key my-secret-key
+aws configure set region                eu-central-1
+
+ansible-test integration [target]
+```
+
+#### Setup variables
+
+```shell
+$ cp sample_vars.yml vars.yml
+```
+
+#### Dev orchestration and teardown
 ```shell
 # up
-ansible-playbook playbooks/provision.yml -i inventory/rhelai.aws_ec2.yml -e @vars.yml -e rhelai_aws_teardown=false
+$ ansible-playbook playbooks/aws_orchestration/provision.yml -i inventory/rhelai.aws_ec2.yml -e @vars.yml
 
 # down
-ansible-playbook playbooks/teardown.yml -i inventory/rhelai.aws_ec2.yml -e @vars.yml -e rhelai_aws_teardown=true
+$ ansible-playbook playbooks/aws_orchestration/teardown.yml -i inventory/rhelai.aws_ec2.yml -e @vars.yml
 
 # display inventory
-ansible-inventory -i inventory/rhelai.aws_ec2.yml --graph
+$ ansible-inventory -i inventory/rhelai.aws_ec2.yml --graph
 
 # install nginx proxy
-ansible-playbook playbooks/proxy.yml -i inventory/rhelai.aws_ec2.yml -e @vars.yml -e rhelai_aws_teardown=false
+$ ansible-playbook playbooks/proxy/proxy.yml -i inventory/rhelai.aws_ec2.yml -e @vars.yml
+```
+
+## Testing
+
+### Integration
+
+```shell
+$ ansible-test integration
 ```
 
 ## More information

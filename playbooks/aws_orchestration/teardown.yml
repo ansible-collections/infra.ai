@@ -1,0 +1,55 @@
+---
+- name: Teardown infrastructure
+  gather_facts: false
+  hosts: localhost
+  tasks:
+    - name: Teardown infrastructure
+      module_defaults:
+        group/aws:
+          region: "{{ aws_region | default(lookup('ansible.builtin.env', 'AWS_REGION')) }}"
+          aws_access_key: "{{ aws_access_key | default(lookup('ansible.builtin.env', 'AWS_ACCESS_KEY')) }}"
+          aws_secret_key: "{{ aws_secret_key | default(lookup('ansible.builtin.env', 'AWS_SECRET_KEY')) }}"
+
+      block:
+        - name: Setup credentials
+          ansible.builtin.include_role:
+            name: cloud.aws_ops.aws_setup_credentials
+
+        - name: Get the running instance
+          amazon.aws.ec2_instance_info:
+            filters:
+              "tag:Name": "{{ rhelai_aws_resource_name }}-instance"
+              instance-state-name: running
+          register: ec2_instance
+          # until: ec2_instance.instances | length > 0
+          retries: 3
+          delay: 30
+
+        - name: Disassociate an elastic IP from an instance
+          amazon.aws.ec2_eip:
+            device_id: "{{ ec2_instance.instances[0].instance_id }}"
+            ip: "{{ rhelai_aws_eip }}"
+            state: absent
+          when: rhelai_aws_eip | length > 0 and ec2_instance.instances | length > 0
+
+        - name: Destroy RHELAI EC2 instance
+          ansible.builtin.include_role:
+            name: cloud.aws_ops.manage_ec2_instance
+          vars:
+            manage_ec2_instance_operation: delete
+            manage_ec2_instance_instance_name: "{{ rhelai_aws_resource_name }}-instance"
+            manage_ec2_instance_wait_for_state: true
+
+        - name: Find the vpc
+          amazon.aws.ec2_vpc_net_info:
+            filters:
+              "tag:Name": "{{ rhelai_aws_resource_name }}-vpc"
+          register: vpc_info
+
+        - name: Destroy RHELAI VPC
+          ansible.builtin.include_role:
+            name: cloud.aws_ops.ec2_networking_resources
+          vars:
+            ec2_networking_resources_operation: delete
+            ec2_networking_resources_vpc_name: "{{ rhelai_aws_resource_name }}-vpc"
+          when: vpc_info.vpcs | length > 0

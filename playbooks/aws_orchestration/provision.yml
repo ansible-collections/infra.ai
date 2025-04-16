@@ -1,0 +1,128 @@
+---
+- name: Provision infrastructure
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Orchestrate
+      vars:
+        rhelai_aws_key_default_name: "{{ rhelai_aws_resource_name }}-key"
+      module_defaults:
+        group/aws:
+          region: "{{ aws_region | default(lookup('ansible.builtin.env', 'AWS_REGION')) }}"
+          aws_access_key: "{{ aws_access_key | default(lookup('ansible.builtin.env', 'AWS_ACCESS_KEY')) }}"
+          aws_secret_key: "{{ aws_secret_key | default(lookup('ansible.builtin.env', 'AWS_SECRET_KEY')) }}"
+
+      block:
+        - name: Setup credentials
+          ansible.builtin.include_role:
+            name: cloud.aws_ops.aws_setup_credentials
+
+        - name: Fetch keypair if key name is defined
+          amazon.aws.ec2_key_info:
+            region: "{{ rhelai_aws_aws_region }}"
+            names:
+              - "{{ rhelai_aws_key_name }}"
+          register: keypair_info
+          when: rhelai_aws_key_name is defined and rhelai_aws_key_name | length > 0
+
+        - name: Create AWS key pair
+          vars:
+            key_name: >-
+              {{
+                rhelai_aws_key_name if rhelai_aws_key_name | default('') | length > 0 else
+                rhelai_aws_key_default_name
+              }}
+            key_material: >-
+              {{
+                rhelai_aws_key_material if rhelai_aws_key_material is defined and
+                rhelai_aws_key_material | default('') | length > 0
+                else omit
+              }}
+          amazon.aws.ec2_key:
+            name: "{{ key_name }}"
+            region: "{{ rhelai_aws_aws_region }}"
+            key_material: "{{ key_material }}"
+            state: present
+          register: aws_key
+          when: >
+            (
+              rhelai_aws_key_name | length > 0 and
+              rhelai_aws_key_material | default('') | length > 0 and
+              keypair_info is undefined and
+              keypair_info.keypairs is undefined and
+              keypair_info.keypairs | length == 0
+            )
+            or
+            (
+              rhelai_aws_key_name | length == 0 and
+              rhelai_aws_key_material | default('') | length > 0
+            )
+
+        - name: Set keyname
+          ansible.builtin.set_fact:
+            generated_aws_key: >-
+              {{
+                aws_key.key.name
+                if
+                  aws_key.key is defined and aws_key.key.name is defined
+                else
+                  rhelai_aws_key_name if rhelai_aws_key_name | default('') | length > 0
+                else
+                  rhelai_aws_key_default_name
+              }}
+
+        - name: Create RHELAI VPC
+          ansible.builtin.include_role:
+            name: cloud.aws_ops.ec2_networking_resources
+          vars:
+            ec2_networking_resources_vpc_name: "{{ rhelai_aws_resource_name }}-vpc"
+            ec2_networking_resources_vpc_cidr_block: "{{ rhelai_aws_vpc_cidr }}"
+            ec2_networking_resources_subnet_cidr_block: "{{ rhelai_aws_subnet_cidr }}"
+            ec2_networking_resources_sg_name: "{{ rhelai_aws_resource_name }}-sg"
+            ec2_networking_resources_sg_description: RHELAI Default SG
+            ec2_networking_resources_sg_rules:
+              - proto: tcp
+                ports: 22
+                cidr_ip: 0.0.0.0/0
+              - proto: tcp
+                ports: 80
+                cidr_ip: 0.0.0.0/0
+              - proto: tcp
+                ports: 443
+                cidr_ip: 0.0.0.0/0
+              - proto: tcp
+                ports: 8000
+                cidr_ip: 0.0.0.0/0
+            ec2_networking_resources_create_igw: true
+
+        - name: Get instance info with provided name
+          amazon.aws.ec2_instance_info:
+            filters:
+              "tag:Name": "{{ rhelai_aws_resource_name }}-instance"
+              instance-state-name: ["pending", "running"]
+          register: ec2_info_result
+
+        - name: Create RHELAI EC2 instance
+          ansible.builtin.include_role:
+            name: cloud.aws_ops.manage_ec2_instance
+          vars:
+            manage_ec2_instance_operation: create
+            manage_ec2_instance_instance_name: "{{ rhelai_aws_resource_name }}-instance"
+            manage_ec2_instance_instance_type: "{{ rhelai_aws_instance_type }}"
+            manage_ec2_instance_ami_id: "{{ rhelai_aws_rhelai_ami }}"
+            manage_ec2_instance_vpc_subnet_id: "{{ ec2_networking_resources_subnet_result.subnet.id }}"
+            manage_ec2_instance_associate_security_groups: "{{ ec2_networking_resources_sg_result.group_id }}"
+            manage_ec2_instance_associate_eip: "{{ rhelai_aws_eip is not defined or rhelai_aws_eip | length == 0 }}"
+            manage_ec2_instance_key_name: "{{ generated_aws_key }}"
+            manage_ec2_instance_tags:
+              Environment: RHEL-AI
+              Component: LLM-Serving
+            manage_ec2_instance_wait_for_state: true
+          when: ec2_info_result.instances is not defined or ec2_info_result.instances | length == 0
+
+        - name: Associate elastic ip
+          amazon.aws.ec2_eip:
+            device_id: "{{ ec2_instance.instances[0].instance_id }}"
+            ip: "{{ rhelai_aws_eip }}"
+            state: present
+          when: rhelai_aws_eip | length > 0

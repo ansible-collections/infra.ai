@@ -1,0 +1,49 @@
+upstream {{ nginx_proxy_fqdn }} {
+    server 127.0.0.1:8080;
+    keepalive 2;
+}
+
+server {
+    server_name {{ nginx_proxy_fqdn }};
+    {# access_log /var/log/nginx/access.log vhost; #}
+    http2 on;
+    listen 80 ;
+
+    location /.well-known/acme-challenge/ {
+        auth_basic off;
+        allow all;
+        root /usr/share/nginx/html;
+        try_files $uri =404;
+        break;
+    }
+    listen 443 ssl ;
+    # No certificate for this vhost nor default certificate found, so reject SSL handshake.
+
+    ssl_certificate /etc/nginx/certs/certificate.pem;
+    ssl_certificate_key /etc/nginx/certs/certificate.key;
+
+    ssl_protocols TLSv1.3;
+    ssl_prefer_server_ciphers on;
+    # ssl_dhparam /etc/nginx/dhparam.pem; 
+    ssl_ciphers EECDH+AESGCM:EDH+AESGCM;
+    ssl_ecdh_curve secp384r1;
+    ssl_session_timeout  10m;
+    # ssl_session_cache shared:SSL:10m;
+    ssl_session_tickets off;
+
+    # temp off
+    ssl_stapling off;
+    ssl_stapling_verify off;
+
+    resolver 8.8.8.8 8.8.4.4 valid=300s;
+    resolver_timeout 5s;
+    add_header X-Frame-Options DENY;
+    add_header X-Content-Type-Options nosniff;
+    add_header X-XSS-Protection "1; mode=block";
+
+    # ssl_reject_handshake on;
+    location / {
+        proxy_pass http://{{ nginx_proxy_fqdn }};
+        set $upstream_keepalive true;
+    }
+}

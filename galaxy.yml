@@ -1,24 +1,29 @@
 ---
 # See https://docs.ansible.com/ansible/latest/dev_guide/collections_galaxy_meta.html
 
-namespace: ai
-name: infra_ops
+namespace: infra
+name: ai
 version: 0.1.0
 readme: README.md
 authors:
   - Peter Grlica (github.com/petergrlica)
-description: null
+description: AI orchestration for infrastructure operations
 license_file: LICENSE
 tags:
-# tags so people can search for collections https://galaxy.ansible.com/search
-# tags are all lower-case, no spaces, no dashes.
-  - example1
-  - example2
-repository: https://github.com/ansible-collections/community.REPO_NAME
-#documentation: https://github.com/ansible-collection-migration/community.REPO_NAME/tree/main/docs
-homepage: https://github.com/ansible-collections/community.REPO_NAME
-issues: https://github.com/ansible-collections/community.REPO_NAME/issues
+  - aws
+  - amazon
+  - cloud
+  - infrastructure
+  - cluster
+  - ai
+dependencies:
+  amazon.aws: '>=9.3.0'
+  community.crypto: '>=2.17.1'
+  cloud.aws_ops: '>=3.1.0'
+  ansible.posix: '>=1.4.0'
+repository: https://github.com/petergrlica/infra.ai
+homepage: https://github.com/petergrlica/infra.ai
+issues: https://github.com/petergrlica/infra.ai/issues
 build_ignore:
-# https://docs.ansible.com/ansible/devel/dev_guide/developing_collections_distributing.html#ignoring-files-and-folders
   - .gitignore
   - changelogs/.plugin-cache.yaml

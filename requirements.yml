@@ -1,0 +1,8 @@
+---
+collections:
+  - amazon.aws
+  - community.crypto
+  - ansible.posix
+  - name: https://github.com/redhat-cop/cloud.aws_ops
+    type: git
+    version: main
