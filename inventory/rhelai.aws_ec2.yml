@@ -1,8 +1,8 @@
 # aws ec2 ansible dynamic inventory plugin
 plugin: amazon.aws.aws_ec2
 
-regions:
-  - eu-central-1
+#regions:
+#  - eu-central-1
 
 # Removed filters to include all instances
 filters: {}
