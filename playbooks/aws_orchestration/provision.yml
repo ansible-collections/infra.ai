@@ -19,7 +19,6 @@
 
         - name: Fetch keypair if key name is defined
           amazon.aws.ec2_key_info:
-            region: "{{ rhelai_aws_aws_region }}"
             names:
               - "{{ rhelai_aws_key_name }}"
           register: keypair_info
@@ -48,9 +47,11 @@
             (
               rhelai_aws_key_name | length > 0 and
               rhelai_aws_key_material | default('') | length > 0 and
-              keypair_info is undefined and
-              keypair_info.keypairs is undefined and
-              keypair_info.keypairs | length == 0
+              (
+                keypair_info is undefined or
+                keypair_info.keypairs is undefined or
+                keypair_info.keypairs | length == 0
+              )
             )
             or
             (
@@ -71,26 +72,24 @@
                   rhelai_aws_key_default_name
               }}
 
-# --------------------------------------------
         - name: Fix for AWS availability zone
           vars:
-            region: "{{ aws_region | default(lookup('ansible.builtin.env', 'AWS_REGION')) }}"
+            # region: "{{ aws_region | default(lookup('ansible.builtin.env', 'AWS_REGION')) }}"
             ec2_networking_resources_vpc_name: "{{ rhelai_aws_resource_name }}-vpc"
+            ec2_networking_resources_vpc_cidr_block: "{{ rhelai_aws_vpc_cidr }}"
             ec2_networking_resources_subnet_cidr_block: "{{ rhelai_aws_subnet_cidr }}"
           block:
             - name: Create VPC - fixed az
               amazon.aws.ec2_vpc_net:
                 name: "{{ ec2_networking_resources_vpc_name }}"
                 cidr_block: "{{ ec2_networking_resources_vpc_cidr_block }}"
-              register: temp_ec2_networking_resources_vpc_result
+              register: ec2_networking_resources_vpc_result
 
             - name: Create VPC subnet - fixed az
               amazon.aws.ec2_vpc_subnet:
-                vpc_id: "{{ temp_  ec2_networking_resources_vpc_result.vpc.id }}"
+                vpc_id: "{{ ec2_networking_resources_vpc_result.vpc.id }}"
                 cidr: "{{ ec2_networking_resources_subnet_cidr_block }}"
-                az: "{{ region }}a"
-              # register: ec2_networking_resources_subnet_result
-# --------------------------------------------
+                az: "{{ rhelai_aws_aws_region }}a"
 
         - name: Create RHELAI VPC
           ansible.builtin.include_role:
