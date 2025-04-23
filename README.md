@@ -1,90 +1,121 @@
 # infra.ai Validated Content Collection
 
-This repository holds the `infra.ai` Ansible Collection.
+This repository hosts the ``infra.ai`` Ansible Collection.
 
 ## Description
-This collection is curated to provide users with a robust set of roles, playbooks, and rulebooks that simplify and streamline AWS infrastructure operations related to RHEL AI.
+
+This collection is curated to provide users with a robust set of roles and playbooks that simplify and streamline Amazon Web Services (AWS) infrastructure operations in Red Hat Enterprise Linux AI (RHEL AI) environments.
+
+As a Red Hat Ansible [Certified Content](https://catalog.redhat.com/software/search?target_platforms=Red%20Hat%20Ansible%20Automation%20Platform), this collection is entitled to [support](https://access.redhat.com/support/) through [Ansible Automation Platform](https://www.redhat.com/en/technologies/management/ansible) (AAP) through the Red Hat Ansible team.
 
 ## Requirements
 
 The [amazon.aws](https://github.com/ansible-collections/amazon.aws) and [cloud.aws_ops](https://github.com/redhat-cop/cloud.aws_ops) collections MUST be installed in order for this collection to work.
 
-### Ansible version compatibility
-This collection has been tested against following Ansible versions: >=2.15.0.
+<!--start requires_ansible-->
+### Ansible Version Compatibility
 
-### Included content
-Click on the name of a role, playbook, or rulebook to view that content's documentation:
+This collection has been tested against following Ansible versions: **>=2.16.0**.
+<!--end requires_ansible-->
 
-<!--start collection content-->
-### Roles
-Name | Description
---- | ---
-[infra.ai.nginx_proxy](roles/nginx_proxy/README.md)|A role to orchestrate nginx proxy.
+### Python Version Compatibility
 
-### Playbooks
-Name | Description
---- | ---
-[infra.ai.aws_provision.provision](playbooks/aws_orchestration/PROVISION.md)|AWS provisioning EC2 instances playbook.
-[infra.ai.aws_provision.teardown](playbooks/aws_orchestration/TEARDOWN.md)|Facilitating teardown of created EC2 instances.
-[infra.ai.proxy.proxy](playbooks/proxy/README.md)|Orchestration of the nginx proxy on the provisioned instances.
-<!--end collection content-->
+This collection requires Python 3.10 or newer.
 
 ## Installation
 
-```shell
-$ ansible-galaxy collection install -r requirements.yml
+To consume this Validated Content from Automation Hub, please ensure that you add the following lines to your ``ansible.cfg`` file.
+
+```
+[galaxy]
+server_list = automation_hub
+
+[galaxy_server.automation_hub]
+url=https://cloud.redhat.com/api/automation-hub/
+auth_url=https://sso.redhat.com/auth/realms/redhat-external/protocol/openid-connect/token
+token=<SuperSecretToken>
+```
+The token can be obtained from the [Automation Hub Web UI](https://console.redhat.com/ansible/automation-hub/token).
+
+Once the above steps are done, you can run the following command to install the collection.
+
+```bash
+ansible-galaxy collection install infra.ai
 ```
 
-## Usage
+You can also include it in a ``requirements.yml`` file and install it with ``ansible-galaxy collection install -r requirements.yml``, using the format:
 
-### Setting up aws-related settings
+```yaml
+---
+collections:
+  - name: infra.ai
+```
 
-Set your dev env:
+Note that if you install any collections from Ansible Galaxy, they will not be upgraded automatically when you upgrade the Ansible package. To upgrade the collection to the latest available version, run the following command:
+
+```bash
+ansible-galaxy collection install infra.ai --upgrade
+```
+
+You can also install a specific version of the collection, for example, if you need to downgrade when something is broken in the latest version (please report an issue in this repository). Use the following syntax to install version 1.0.0:
+
+```bash
+ansible-galaxy collection install infra.ai:==1.0.0
+```
+
+See [using Ansible collections](https://docs.ansible.com/ansible/devel/user_guide/collections_using.html) for more details.
+
+
+## Using This Xollection
+
+### Set Up AWS Credentials
+
 ```shell
 # using the "default" profile on AWS
 aws configure set aws_access_key_id     my-access-key
 aws configure set aws_secret_access_key my-secret-key
 aws configure set region                eu-central-1
-
-ansible-test integration [target]
 ```
 
-### Setup variables
+### Set Variables
 
 ```shell
-$ cp sample_vars.yml vars.yml
+cp sample_vars.yml vars.yml
 ```
+
+The ``sample_vars.yml`` file provides a well-documented starting point for setting up your configuration.
+You are encouraged to customize ``vars.yml`` to suit your specific environment and use case.
 
 ## Use Cases
 
-### Playbooks
+You can provision and teardown the infrastructure using the following playbooks:
 
-You can provision and teardown the infrastructure with playbooks.
-
-#### Provisioning
+### Provision Infrastructure
 
 ```shell
 ansible-playbook playbooks/aws_orchestration/provision.yml -i inventory/rhelai.aws_ec2.yml -e @vars.yml
 ```
 
-#### Teardown
+### Teardown Infrastructure
+
 ```shell
 ansible-playbook playbooks/aws_orchestration/teardown.yml -i inventory/rhelai.aws_ec2.yml -e @vars.yml
 ```
 
-#### Inventory
+#### View the AWS inventory graph
 ```shell
 ansible-inventory -i inventory/rhelai.aws_ec2.yml --graph
 ```
 
-#### Installing proxy
+#### Instal NGINX Proxy
+
+You can install the nginx proxy using the following playbook:
+
 ```shell
 ansible-playbook playbooks/proxy/proxy.yml -i inventory/rhelai.aws_ec2.yml -e @vars.yml
 ```
 
-### Roles
-
-Set variables and include the role to use `nginx_proxy`.
+The ``playbooks/proxy/proxy.yml`` imports the ``infra.ai.nginx_proxy`` role, but you could also use the role individually by iincluding and setting the required variables as follows:
 
 ```yml
 ---
@@ -94,16 +125,11 @@ Set variables and include the role to use `nginx_proxy`.
     - role: infra.ai.nginx_proxy
       nginx_proxy_fqdn: example.ltd
       nginx_proxy_install_dir: /home/ec2-user
-      module_defaults:
-        group/aws:
-          region: "{{ aws_region | default(lookup('ansible.builtin.env', 'AWS_REGION')) }}"
-          aws_access_key: "{{ aws_access_key | default(lookup('ansible.builtin.env', 'AWS_ACCESS_KEY')) }}"
-          aws_secret_key: "{{ aws_secret_key | default(lookup('ansible.builtin.env', 'AWS_SECRET_KEY')) }}"
 ```
 
 ## Testing
 
-The project uses `ansible-lint` and `black`.
+This Collection uses `ansible-lint` and `black`.
 Assuming this repository is checked out in the proper structure,
 e.g. `collections_root/ansible_collections/infra/ai/`, run:
 
@@ -117,43 +143,26 @@ Sanity and unit tests are run as normal:
 ansible-test sanity
 ```
 
-If you want to run cloud integration tests, ensure you log in to the cloud:
+Run integration tests (ensure AWS credentials are configured):
 
 ```shell
-# using the "default" profile on AWS
-aws configure set aws_access_key_id     my-access-key
-aws configure set aws_secret_access_key my-secret-key
-aws configure set region                eu-central-1
-
-ansible-test integration [target]
+e-test integration [target]
 ```
-
-## Contributing to this collection
-
-We welcome community contributions to this collection. If you find problems, please open an issue or create a PR against this collection repository.
-See [CONTRIBUTING.md](CONTRIBUTING.md) for more details.
-
-## Support
-
-For the latest supported versions, refer to the release notes below.
-
-If you encounter issues or have questions, you can submit a support request through the following channels:
- - GitHub Issues: Report bugs, request features, or ask questions by opening an issue in the [GitHub repository](https://github.com/ansible-collections/infra.ai/).
- - Ansible Community: Engage with the Ansible community on the Ansible Project Mailing List or [Ansible Forum](https://forum.ansible.com/g/AWS).
 
 ## Release Notes
 
-See the [raw generated changelog](https://github.com/ansible-collections/infra.ai/blob/main/CHANGELOG.rst).
-
+Consult the CHANGELOG.rst included in the collection for details.
 
 ## Related Information
 
- - [Ansible User guide](https://docs.ansible.com/ansible/latest/user_guide/index.html).
- - [Ansible Rulebook documentation](https://ansible.readthedocs.io/projects/rulebook/en/stable/index.html).
- - [Ansible Community code of conduct](https://docs.ansible.com/ansible/latest/community/code_of_conduct.html)
+- [Ansible Collection overview](https://github.com/ansible-collections/overview)
+- [Ansible User guide](https://docs.ansible.com/ansible/latest/user_guide/index.html)
+- [Ansible Developer guide](https://docs.ansible.com/ansible/latest/dev_guide/index.html)
+- [Ansible Collection Developer Guide](https://docs.ansible.com/ansible/devel/dev_guide/developing_collections.html)
+- [Ansible Community code of conduct](https://docs.ansible.com/ansible/latest/community/code_of_conduct.html)
 
 ## License
 
 GNU General Public License v3.0 or later
 
-See [LICENSE](LICENSE) to see the full text.
+Consult the LICENSE included in the collection to see the full text.

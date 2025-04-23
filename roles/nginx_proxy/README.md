@@ -1,26 +1,29 @@
 # nginx_proxy
 
-A role to create nginx reverse proxy with optional Letsencrypt TLS certificates.
+A role to create nginx reverse proxy with optional Let's Encrypt TLS certificates.
 
 ## Requirements
 
-Instance that runs a service on a specified (default 8000) port, that the nginx reverse proxy will subsequently proxy to.
-Support Letsencrypt certificates, but defaults to self-signed certificates.
+- The target instance must be running a service on a specified port (default is 8000), which NGINX will proxy requests to.
+- The role supports both Let's Encrypt certificates and self-signed certificates out of the box.
 
 ## Role Variables
 
-- **nginx_proxy_fqdn**: Fully-qualified domain name for the nginx proxy service, also the domain for which the Letsencrypt TLS cert to be fetched (if enabled).
-- **nginx_proxy_install_dir**: Installation directory for the nginx proxy.
+- **nginx_proxy_fqdn**: Fully-qualified domain name for the nginx proxy service, also the domain for which the Let's Encrypt TLS cert to be fetched (if enabled).
+- **nginx_proxy_install_dir**: Installation directory for the NGINX proxy.
 - **nginx_proxy_tls_organization_name**: Organization name to use when generating self-signed certificates.
 
 ## Example Playbook
 
+```yaml
+    ---
     - hosts: localhost
       roles:
         - role: infra.ai.nginx_proxy
           nginx_proxy_fqdn: rp.example.com
           nginx_proxy_install_dir: /home/ec2-user
           nginx_proxy_tls_organization_name: ACME Inc.
+```
 
 ## License
 
