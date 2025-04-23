@@ -105,13 +105,7 @@
                 ports: 22
                 cidr_ip: 0.0.0.0/0
               - proto: tcp
-                ports: 80
-                cidr_ip: 0.0.0.0/0
-              - proto: tcp
-                ports: 443
-                cidr_ip: 0.0.0.0/0
-              - proto: tcp
-                ports: 8000
+                ports: 8443
                 cidr_ip: 0.0.0.0/0
             ec2_networking_resources_create_igw: true
 

@@ -1,3 +1,3 @@
 ---
-ansible_user: ec2-user
+ansible_user: cloud-user
 ansible_ssh_extra_args: "-o StrictHostKeyChecking=no"
