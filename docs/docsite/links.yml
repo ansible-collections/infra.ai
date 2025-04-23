@@ -3,14 +3,14 @@
 # that allow users to directly create a PR for this plugin or module in GitHub's UI.
 # Remove this section if the collection repository is not on GitHub, or if you do not want this
 # functionality for your collection.
-edit_on_github:
-  repository: petergrlica/infra.ai
-  branch: main
-  # If your collection root (the directory containing galaxy.yml) does not coincide with your
-  # repository's root, you have to specify the path to the collection root here. For example,
-  # if the collection root is in a subdirectory ansible_collections/community/REPO_NAME
-  # in your repository, you have to set path_prefix to 'ansible_collections/community/REPO_NAME'.
-  path_prefix: ''
+# edit_on_github:
+#   repository: petergrlica/infra.ai
+#   branch: main
+#   # If your collection root (the directory containing galaxy.yml) does not coincide with your
+#   # repository's root, you have to specify the path to the collection root here. For example,
+#   # if the collection root is in a subdirectory ansible_collections/community/REPO_NAME
+#   # in your repository, you have to set path_prefix to 'ansible_collections/community/REPO_NAME'.
+#   path_prefix: ''
 
 # Here you can add arbitrary extra links. Please keep the number of links down to a
 # minimum! Also please keep the description short, since this will be the text put on
@@ -23,9 +23,9 @@ edit_on_github:
 #      `documentation` or `repository` link);
 #   3. A link to the collection's repository (if `repository` is specified).
 
-extra_links:
-  - description: Report an issue
-    url: https://github.com/petergrlica/infra.ai/issues/new/choose
+# extra_links:
+#   - description: Report an issue
+#     url: https://github.com/petergrlica/infra.ai/issues/new/choose
 
 # Specify communication channels for your collection. We suggest to not specify more
 # than one place for communication per communication tool to avoid confusion.

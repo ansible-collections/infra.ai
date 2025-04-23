@@ -3,7 +3,7 @@
 
 namespace: infra
 name: ai
-version: 0.1.0
+version: 1.0.0
 readme: README.md
 authors:
   - Peter Grlica (github.com/petergrlica)
@@ -21,9 +21,9 @@ dependencies:
   community.crypto: '>=2.17.1'
   cloud.aws_ops: '>=3.1.0'
   ansible.posix: '>=1.4.0'
-repository: https://github.com/petergrlica/infra.ai
-homepage: https://github.com/petergrlica/infra.ai
-issues: https://github.com/petergrlica/infra.ai/issues
+repository: https://github.com/ansible
+homepage: https://www.redhat.com/en/products/ai/enterprise-linux-ai
+issues: https://access.redhat.com/support/
 build_ignore:
   - .gitignore
   - changelogs/.plugin-cache.yaml
