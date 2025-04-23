@@ -125,6 +125,11 @@ The ``playbooks/proxy/proxy.yml`` imports the ``infra.ai.nginx_proxy`` role, but
     - role: infra.ai.nginx_proxy
       nginx_proxy_fqdn: example.ltd
       nginx_proxy_install_dir: /home/ec2-user
+      module_defaults:
+        group/aws:
+          region: "{{ aws_region | default(lookup('ansible.builtin.env', 'AWS_REGION')) }}"
+          aws_access_key: "{{ aws_access_key | default(lookup('ansible.builtin.env', 'AWS_ACCESS_KEY')) }}"
+          aws_secret_key: "{{ aws_secret_key | default(lookup('ansible.builtin.env', 'AWS_SECRET_KEY')) }}"
 ```
 
 ## Testing
@@ -146,7 +151,7 @@ ansible-test sanity
 Run integration tests (ensure AWS credentials are configured):
 
 ```shell
-e-test integration [target]
+ansible-test integration [target]
 ```
 
 ## Release Notes
