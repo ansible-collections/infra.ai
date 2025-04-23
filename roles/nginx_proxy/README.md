@@ -10,7 +10,7 @@ A role to create nginx reverse proxy with optional Let's Encrypt TLS certificate
 ## Role Variables
 
 - **nginx_proxy_fqdn**: Fully-qualified domain name for the nginx proxy service, also the domain for which the Let's Encrypt TLS cert to be fetched (if enabled).
-- **nginx_proxy_install_dir**: Installation directory for the NGINX proxy.
+- **nginx_proxy_install_dir**: Installation directory for the nginx proxy.
 - **nginx_proxy_tls_organization_name**: Organization name to use when generating self-signed certificates.
 
 ## Example Playbook
