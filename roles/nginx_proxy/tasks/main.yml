@@ -1,8 +1,6 @@
-- name: Install dependencies
-  ansible.builtin.import_tasks: deps.yml
-
 - name: Self-signed certificates
+  delegate_to: localhost
   ansible.builtin.import_tasks: tls.yml
 
-- name: Install podman
-  ansible.builtin.import_tasks: podman.yml
+- name: Install services
+  ansible.builtin.import_tasks: service.yml
