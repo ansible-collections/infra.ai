@@ -2,9 +2,9 @@
 argument_specs:
   main:
     version_added: 1.0.0
-    short_description: A role to create nginx reverse proxy with optional Let's Encrypt TLS certificates.
+    short_description: A role to create nginx reverse proxy with self-signed TLS certificates.
     description:
-      - A role to create nginx reverse proxy with optional Let's Encrypt TLS certificates.
+      - A role to create nginx reverse proxy with self-signed TLS certificates.
     options:
       nginx_proxy_fqdn:
         type: str
