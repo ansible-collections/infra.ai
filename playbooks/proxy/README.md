@@ -1,6 +1,6 @@
 # infra.ai.proxy.proxy playbook
 
-This playbook sets up all necessary components on the target node to run a reverse NGINX proxy. It supports both self-signed certificates and automated certificate provisioning using Let's Encrypt.
+This playbook sets up all necessary components on the target node to run a reverse NGINX proxy. It supports self-signed certificates.
 
 This playbook relies on the following role:
 

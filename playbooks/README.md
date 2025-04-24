@@ -13,6 +13,5 @@ This playbook sets up a reverse NGINX proxy, capable of handling:
 
 - Self-signed certificates
 - Custom certificate files
-- Certificates issued by Let's Encrypt
 
 It installs all required dependencies and runs the proxy inside a Podman container. The proxy forwards requests to the deployed ``instructlab`` service.
