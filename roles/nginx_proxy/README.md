@@ -5,7 +5,7 @@ A role to create nginx reverse proxy with self-signed TLS certificates support.
 ## Requirements
 
 - The target instance must be running a service on a specified port (default is 8000), which NGINX will proxy requests to.
-- The role self-signed certificates.
+- The role supports self-signed certificates.
 
 ## Role Variables
 
