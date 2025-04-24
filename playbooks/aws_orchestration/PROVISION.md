@@ -7,9 +7,7 @@ A playbook to support provisioning AWS EC2 instances to host RHELAI AMI images. 
 - Security groups
 - EC2 instance launch
 
-All resources created are prefixed using the rhelai_aws_resource_name variable, which can be configured in your variable file.
-
-## Roles Used
+All resources created are prefixed using the ``rhelai_aws_resource_name`` variable, which can be configured in your variable file.
 
 This playbook includes the following roles:
 

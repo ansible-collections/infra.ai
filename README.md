@@ -66,7 +66,7 @@ ansible-galaxy collection install infra.ai:==1.0.0
 See [using Ansible collections](https://docs.ansible.com/ansible/devel/user_guide/collections_using.html) for more details.
 
 
-## Using This Xollection
+## Using This Collection
 
 ### Set Up AWS Credentials
 
@@ -107,7 +107,7 @@ ansible-playbook playbooks/aws_orchestration/teardown.yml -i inventory/rhelai.aw
 ansible-inventory -i inventory/rhelai.aws_ec2.yml --graph
 ```
 
-#### Instal NGINX Proxy
+#### Install NGINX Proxy
 
 You can install the nginx proxy using the following playbook:
 
@@ -115,7 +115,7 @@ You can install the nginx proxy using the following playbook:
 ansible-playbook playbooks/proxy/proxy.yml -i inventory/rhelai.aws_ec2.yml -e @vars.yml
 ```
 
-The ``playbooks/proxy/proxy.yml`` imports the ``infra.ai.nginx_proxy`` role, but you could also use the role individually by iincluding and setting the required variables as follows:
+The ``playbooks/proxy/proxy.yml`` imports the ``infra.ai.nginx_proxy`` role, but you could also use the role individually by including and setting the required variables as follows:
 
 ```yml
 ---
