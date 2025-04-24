@@ -1,13 +1,16 @@
 # infra.ai.proxy.proxy playbook
 
-A playbook that installs necessary requirements on the target node to run a reverse proxy with the self-signed certificates or Letsencrypt support.
+This playbook sets up all necessary components on the target node to run a reverse NGINX proxy. It supports self-signed certificates.
 
-This playbook uses the following roles:
- - **[infra.ai.nginx_proxy](../../roles/nginx_proxy/README.md)**
+This playbook relies on the following role:
+
+- **infra.ai.nginx_proxy**
 
 ## Example Usage
 
-Follow [README](../../README.md) on setting up AWS credentials.
+Before running the playbook, ensure your AWS credentials are properly configured and variables are set.
+
+Run the playbook with:
 
 ```shell
 ansible-playbook infra.ai.proxy.proxy -i rhelai.aws_ec2.yml -e @sample_vars.yml

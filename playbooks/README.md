@@ -2,18 +2,16 @@
 
 ## AWS playbooks
 
-Playbooks to orchestrate AWS instances in order to facilitate RHELAI infrastructure:
+These playbooks are designed to orchestrate AWS infrastructure in support of RHEL AI environments:
 
- - [aws provision](./aws_orchestration/PROVISION.md)
- - [aws teardown](./aws_orchestration/TEARDOWN.md)
+- Provision – Launch and configure AWS instances required for your RHEL AI deployment.
+- Teardown – Safely remove all provisioned resources to ensure a clean shutdown of the environment.
 
 ## Proxy playbook
 
-The reverse nginx proxy that handles either self-signed certificates,
-own certificate files or Let's encrypt downloaded ones.
+This playbook sets up a reverse NGINX proxy, capable of handling:
 
-Playbook installs necessary dependencies and runs the nginx proxy in a
-podman containerized environment, that proxies the requests to the
-installed `instructlab` software.
+- Self-signed certificates
+- Custom certificate files
 
-See more: [proxy playbook](./proxy/README.md)
+It installs all required dependencies and runs the proxy inside a Podman container. The proxy forwards requests to the deployed ``instructlab`` service.
