@@ -1,0 +1,9 @@
+---
+baremetal_iso_username: cloud-user
+baremetal_iso_password_plain: ""
+baremetal_iso_unique_name: baremetal0
+baremetal_iso_registry_host: registry.redhat.io
+baremetal_iso_oci_image: "{{ baremetal_iso_registry_host }}/rhelai1/bootc-nvidia-rhel9:1.4"
+baremetal_iso_network_mode: dhcp
+baremetal_iso_network_nameserver: 1.1.1.1,1.0.0.1
+baremetal_iso_root_ssh_key: ""

@@ -1,0 +1,22 @@
+---
+- name: Provision baremetal infrastructure
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: Remaster RHEL AI source ISO image
+      ansible.builtin.include_role:
+        name: infra.ai.baremetal_iso
+      vars:
+        baremetal_iso_root_password_plain: "{{ rhelai_baremetal_root_password_plain }}"
+        baremetal_iso_ssh_key: "{{ rhelai_baremetal_ssh_key }}"
+        baremetal_iso_registry_username: "{{ rhelai_baremetal_registry_username }}"
+        baremetal_iso_registry_password: "{{ rhelai_baremetal_registry_password }}"
+        baremetal_iso_source_image: "{{ rhelai_baremetal_source_image }}"
+        # baremetal_iso_network_mode: static
+        # baremetal_iso_network_address: 192.168.122.10
+        # baremetal_iso_network_netmask: 255.255.255.0
+        # baremetal_iso_network_gateway: 192.168.122.1
+
+    - name: Show path to generated image
+      ansible.builtin.debug:
+        msg: Generated ISO image is available at {{ baremetal_iso_image }}
