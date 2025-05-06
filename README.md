@@ -71,6 +71,18 @@ See [using Ansible collections](https://docs.ansible.com/ansible/devel/user_guid
 
 ## Use Case - AWS
 
+### Using Google Cloud infrastructure
+
+Generate the service account key to be used with `rhelai_gcp_service_account_file` in the `vars.yml` file.
+
+```shell
+# initialize gcloud cli tool if not already
+gcloud init
+
+# generate the service account file
+gcloud iam service-accounts keys create <path to json output file> --iam-account=<iam account>
+```
+
 ### Configure AWS Credentials
 
 ```shell

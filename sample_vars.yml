@@ -9,6 +9,19 @@ rhelai_aws_aws_region: us-east-1
 rhelai_aws_vpc_cidr: "10.0.0.0/16"
 rhelai_aws_subnet_cidr: "10.0.1.0/24"
 rhelai_aws_eip: ""
+rhelai_aws_key_name: "rhelai-keyname"
+rhelai_aws_key_material: "ssh-ed25519 ... your public key here ..."
+
+######################################## GCP variables
+rhelai_gcp_resource_name: rhelai-gcp
+rhelai_gcp_region: europe-central2
+rhelai_gcp_project: rhelai-gcp
+rhelai_gcp_instance_type: e2-micro
+rhelai_gcp_service_account: xxx-compute@developer.gserviceaccount.com
+rhelai_gcp_service_account_file: ../key.json
+rhelai_gcp_key_material: |
+  user:ssh-ed25519 ... your public key here ... user@email
+rhelai_gcp_eip: ""
 
 ######################################## Nginx proxy settings
 nginx_proxy_fqdn: example.tld
