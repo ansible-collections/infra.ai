@@ -1,16 +1,18 @@
 # infra.ai Validated Content Collection
 
-This repository hosts the ``infra.ai`` Ansible Collection.
+This repository hosts the ``infra.ai`` Validated Content Collection.
 
 ## Description
 
 This collection is curated to provide users with a robust set of roles and playbooks that simplify and streamline Amazon Web Services (AWS) infrastructure operations in Red Hat Enterprise Linux AI (RHEL AI) environments.
 
-As a Red Hat Ansible [Certified Content](https://catalog.redhat.com/software/search?target_platforms=Red%20Hat%20Ansible%20Automation%20Platform), this collection is entitled to [support](https://access.redhat.com/support/) through [Ansible Automation Platform](https://www.redhat.com/en/technologies/management/ansible) (AAP) through the Red Hat Ansible team.
+**Note**: This collection is provided as validated content, meaning it's intended as a flexible, customizable starting point. As such, Red Hat does not officially support this collection. For feedback or requests, please contact your Red Hat account representative.
 
 ## Requirements
 
-The [amazon.aws](https://github.com/ansible-collections/amazon.aws) and [cloud.aws_ops](https://github.com/redhat-cop/cloud.aws_ops) collections MUST be installed in order for this collection to work.
+To use this collection, the following dependencies MUST be installed:
+- [amazon.aws](https://github.com/ansible-collections/amazon.aws)
+- [cloud.aws_ops](https://github.com/redhat-cop/cloud.aws_ops)
 
 <!--start requires_ansible-->
 ### Ansible Version Compatibility
@@ -37,7 +39,8 @@ token=<SuperSecretToken>
 ```
 The token can be obtained from the [Automation Hub Web UI](https://console.redhat.com/ansible/automation-hub/token).
 
-Once the above steps are done, you can run the following command to install the collection.
+Once the above steps are done, you need to install it with the Ansible Galaxy command-line tool:
+
 
 ```bash
 ansible-galaxy collection install infra.ai
@@ -66,9 +69,9 @@ ansible-galaxy collection install infra.ai:==1.0.0
 See [using Ansible collections](https://docs.ansible.com/ansible/devel/user_guide/collections_using.html) for more details.
 
 
-## Using This Collection
+## Use Cases
 
-### Set Up AWS Credentials
+### Configure AWS Credentials
 
 ```shell
 # using the "default" profile on AWS
@@ -86,36 +89,37 @@ cp sample_vars.yml vars.yml
 The ``sample_vars.yml`` file provides a well-documented starting point for setting up your configuration.
 You are encouraged to customize ``vars.yml`` to suit your specific environment and use case.
 
-## Use Cases
+### View the AWS inventory graph
 
-You can provision and teardown the infrastructure using the following playbooks:
-
-### Provision Infrastructure
-
-```shell
-ansible-playbook playbooks/aws_orchestration/provision.yml -i inventory/rhelai.aws_ec2.yml -e @vars.yml
-```
-
-### Teardown Infrastructure
-
-```shell
-ansible-playbook playbooks/aws_orchestration/teardown.yml -i inventory/rhelai.aws_ec2.yml -e @vars.yml
-```
-
-#### View the AWS inventory graph
+Generate a graphical view of your AWS inventory:
 ```shell
 ansible-inventory -i inventory/rhelai.aws_ec2.yml --graph
 ```
 
-#### Install NGINX Proxy
+### Playbooks Included in the Collection
 
-You can install the nginx proxy using the following playbook:
+#### 1. Provision Infrastructure
+Launch and configure AWS resources for RHEL AI:
 
 ```shell
-ansible-playbook playbooks/proxy/proxy.yml -i inventory/rhelai.aws_ec2.yml -e @vars.yml
+ansible-playbook playbooks/provision.yml -i inventory/rhelai.aws_ec2.yml -e @vars.yml
 ```
 
-The ``playbooks/proxy/proxy.yml`` imports the ``infra.ai.nginx_proxy`` role, but you could also use the role individually by including and setting the required variables as follows:
+#### 2. Teardown Infrastructure
+Cleanly decommission provisioned AWS resources:
+
+```shell
+ansible-playbook playbooks/teardown.yml -i inventory/rhelai.aws_ec2.yml -e @vars.yml
+```
+
+#### 3. Deploy NGINX Proxy
+Set up a reverse proxy (with SSL support) for services like instructlab:
+
+```shell
+ansible-playbook playbooks/proxy.yml -i inventory/rhelai.aws_ec2.yml -e @vars.yml
+```
+
+The ``playbooks/proxy.yml`` imports the ``infra.ai.nginx_proxy`` role, but you could also use the role individually by including and setting the required variables as follows:
 
 ```yml
 ---
@@ -154,17 +158,9 @@ Run integration tests (ensure AWS credentials are configured):
 ansible-test integration [target]
 ```
 
-## Release Notes
+## Release Notes and Roadmap
 
 Consult the CHANGELOG.rst included in the collection for details.
-
-## Related Information
-
-- [Ansible Collection overview](https://github.com/ansible-collections/overview)
-- [Ansible User guide](https://docs.ansible.com/ansible/latest/user_guide/index.html)
-- [Ansible Developer guide](https://docs.ansible.com/ansible/latest/dev_guide/index.html)
-- [Ansible Collection Developer Guide](https://docs.ansible.com/ansible/devel/dev_guide/developing_collections.html)
-- [Ansible Community code of conduct](https://docs.ansible.com/ansible/latest/community/code_of_conduct.html)
 
 ## License
 
