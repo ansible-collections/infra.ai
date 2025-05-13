@@ -1,4 +1,4 @@
-# nginx_proxy
+# baremetal_iso
 
 A role to create ISO image for automated Red Hat AI installation on baremetal host.
 

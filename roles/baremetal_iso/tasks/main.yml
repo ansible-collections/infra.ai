@@ -7,6 +7,20 @@
       - baremetal_iso_network_gateway is defined
   when: baremetal_iso_network_mode == "static"
 
+- name: Validate dependencies are installed
+  block:
+    - name: Check if mkksiso is installed
+      ansible.builtin.command:
+        cmd: mkksiso -h
+      changed_when: false
+      register: mkksiso_present
+      ignore_errors: true
+
+    - name: Fail if mkksiso is missing
+      ansible.builtin.fail:
+        msg: "Program mkksiso not found. Please install it (sudo dnf install lorax)."
+      when: mkksiso_present is failed
+
 - name: Generate RHAI kickstart file
   block:
     - name: Create temporary file
@@ -21,6 +35,7 @@
         src: rhelai-bootc.ks.j2
         dest: "{{ __baremetal_iso_temp_ks.path }}"
         mode: "0600"
+      no_log: true
 
 - name: Set output variable baremetal_iso_image
   ansible.builtin.set_fact:
@@ -29,6 +44,7 @@
 - name: Remaster ISO image
   ansible.builtin.command:
     cmd: mkksiso "{{ __baremetal_iso_temp_ks.path }}" "{{ baremetal_iso_source_image }}" "{{ baremetal_iso_image }}"
+    # Avoid rebuilding the ISO if it already exists
     creates: "{{ baremetal_iso_image }}"
 
 - name: Remove kickstart file
