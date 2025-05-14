@@ -102,14 +102,14 @@ ansible-inventory -i inventory/rhelai.aws_ec2.yml --graph
 Launch and configure AWS resources for RHEL AI:
 
 ```shell
-ansible-playbook playbooks/provision.yml -i inventory/rhelai.aws_ec2.yml -e @vars.yml
+ansible-playbook playbooks/aws_provision.yml -i inventory/rhelai.aws_ec2.yml -e @vars.yml
 ```
 
 #### 2. Teardown Infrastructure
 Cleanly decommission provisioned AWS resources:
 
 ```shell
-ansible-playbook playbooks/teardown.yml -i inventory/rhelai.aws_ec2.yml -e @vars.yml
+ansible-playbook playbooks/aws_teardown.yml -i inventory/rhelai.aws_ec2.yml -e @vars.yml
 ```
 
 #### 3. Deploy NGINX Proxy
