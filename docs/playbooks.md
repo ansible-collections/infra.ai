@@ -77,3 +77,29 @@ Run the playbook with:
 ```shell
 ansible-playbook infra.ai.proxy -i rhelai.aws_ec2.yml -e @sample_vars.yml
 ```
+
+## Baremetal Orchestration for RHEL AI
+
+The ``infra.ai`` baremetal playbooks provide automation for provisioning and managing baremetal infrastructure in support of Red Hat Enterprise Linux AI (RHEL AI) environments. The suite includes the following key playbooks:
+
+- baremetal_provision.yml – Creates an ISO image. The ISO image is used for provisioning a baremetal host.
+
+### Provisioning Playbook: infra.ai.baremetal_provision
+
+This playbook automates the creation of an ISO image for for provisioning a baremetal host.
+
+Before running the playbook:
+ - RHAI ISO image needs to be downloaded.
+   It is available at ()[].
+ - Container registry credentials for pulling RHAI updates needs to be created.
+   Generate them at https://access.redhat.com/RegistryAuthentication.
+
+#### Example Usage
+
+Ensure container registry credentials are configured and necessary variables are defined before execution.
+
+Run the playbook with:
+
+```shell
+ansible-playbook infra.ai.baremetal_provision -e @baremetal_sample_vars.yml
+```

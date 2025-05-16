@@ -14,10 +14,3 @@ rhelai_aws_eip: ""
 nginx_proxy_fqdn: example.tld
 nginx_proxy_install_dir: /home/ec2-user
 nginx_proxy_tls_organization_name: ACME Ltd.
-
-######################################## baremetal
-rhelai_baremetal_root_password_plain:
-rhelai_baremetal_ssh_key: "ssh-ed25519 AAAA... comment"
-rhelai_baremetal_registry_username:
-rhelai_baremetal_registry_password:
-rhelai_baremetal_source_image: /path/to/rhel-ai-nvidia-1.4-1739107830-x86_64-boot.iso
