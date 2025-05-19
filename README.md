@@ -13,6 +13,7 @@ This collection is curated to provide users with a robust set of roles and playb
 To use this collection, the following dependencies MUST be installed:
 - [amazon.aws](https://github.com/ansible-collections/amazon.aws)
 - [cloud.aws_ops](https://github.com/redhat-cop/cloud.aws_ops)
+- [google.cloud](https://docs.ansible.com/ansible/latest/collections/google/cloud/index.html)
 
 <!--start requires_ansible-->
 ### Ansible Version Compatibility
@@ -71,27 +72,6 @@ See [using Ansible collections](https://docs.ansible.com/ansible/devel/user_guid
 
 ## Use Case - AWS
 
-### Using Google Cloud infrastructure
-
-Generate the service account key to be used with `rhelai_gcp_service_account_file` in the `vars.yml` file.
-
-```shell
-# initialize gcloud cli tool if not already
-gcloud init
-
-# generate the service account file
-gcloud iam service-accounts keys create <path to json output file> --iam-account=<iam account>
-```
-
-### Configure AWS Credentials
-
-```shell
-# using the "default" profile on AWS
-aws configure set aws_access_key_id     my-access-key
-aws configure set aws_secret_access_key my-secret-key
-aws configure set region                eu-central-1
-```
-
 ### Set Variables
 
 ```shell
@@ -100,6 +80,27 @@ cp sample_vars.yml vars.yml
 
 The ``sample_vars.yml`` file provides a well-documented starting point for setting up your configuration.
 You are encouraged to customize ``vars.yml`` to suit your specific environment and use case.
+
+### Using Google Cloud infrastructure
+
+Create the service account file and save the json cred file to be used with `rhelai_gcp_service_account_file` in the `vars.yml` file.
+```shell
+# initialize gcloud cli tool if not already
+gcloud init
+
+# generate the service account file
+gcloud iam service-accounts keys create <path_to_json_cred_output_file> --iam-account=<iam_account>
+```
+
+### Using AWS infrastructure
+
+Create the default AWS credentials
+```shell
+# using the "default" profile on AWS
+aws configure set aws_access_key_id     my-access-key
+aws configure set aws_secret_access_key my-secret-key
+aws configure set region                eu-central-1
+```
 
 ### View the AWS inventory graph
 
@@ -112,16 +113,24 @@ ansible-inventory -i inventory/rhelai.aws_ec2.yml --graph
 
 #### 1. Provision Infrastructure
 Launch and configure AWS resources for RHEL AI:
-
 ```shell
 ansible-playbook infra.ai.aws_provision -i inventory/rhelai.aws_ec2.yml -e @vars.yml
 ```
 
+Launch and configure resources for RHEL AI using Google Cloud:
+```shell
+ansible-playbook playbooks/gcp_provision.yml -e @vars.yml
+```
+
 #### 2. Teardown Infrastructure
 Cleanly decommission provisioned AWS resources:
-
 ```shell
 ansible-playbook infra.ai.aws_teardown -i inventory/rhelai.aws_ec2.yml -e @vars.yml
+```
+
+Cleanly decommission provisioned Google Cloud resources:
+```shell
+ansible-playbook playbooks/gcp_teardown.yml -e @vars.yml
 ```
 
 #### 3. Deploy NGINX Proxy
@@ -200,6 +209,18 @@ Sanity and unit tests are run as normal:
 
 ```shell
 ansible-test sanity
+```
+
+### Google Cloud integration tests setup
+
+In order to run the integration tests on Google Cloud, make sure to perform the initial installation.
+Once that is done, create the file `tests/integration/cloud-config-gcp.ini` containing the following:
+
+```ini
+[default]
+gcp_project: <project ID>
+gcp_cred_file: </path/to/cred/file.json>
+gcp_cred_kind: serviceaccount
 ```
 
 Run integration tests (ensure AWS credentials are configured):

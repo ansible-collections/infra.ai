@@ -18,7 +18,7 @@ rhelai_gcp_region: europe-central2
 rhelai_gcp_project: rhelai-gcp
 rhelai_gcp_instance_type: e2-micro
 rhelai_gcp_service_account: xxx-compute@developer.gserviceaccount.com
-rhelai_gcp_service_account_file: ../key.json
+rhelai_gcp_service_account_file: key.json
 rhelai_gcp_key_material: |
   user:ssh-ed25519 ... your public key here ... user@email
 rhelai_gcp_eip: ""

@@ -12,6 +12,8 @@ license_file: LICENSE
 tags:
   - aws
   - amazon
+  - gcp
+  - google
   - cloud
   - infrastructure
   - cluster
@@ -21,6 +23,7 @@ dependencies:
   community.crypto: '>=2.17.1'
   cloud.aws_ops: '>=3.1.0'
   ansible.posix: '>=1.4.0'
+  google.cloud: '>=1.3.0'
 repository: https://github.com/ansible
 homepage: https://www.redhat.com/en/products/ai/enterprise-linux-ai
 issues: https://access.redhat.com/support/
