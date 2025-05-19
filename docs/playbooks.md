@@ -32,7 +32,7 @@ Ensure AWS credentials are configured and necessary variables are defined before
 Run the playbook with:
 
 ```shell
-ansible-playbook infra.ai.provision -i rhelai.aws_ec2.yml -e @sample_vars.yml
+ansible-playbook infra.ai.aws_provision -i rhelai.aws_ec2.yml -e @sample_vars.yml
 ```
 
 ### Teardown Playbook: infra.ai.teardown
@@ -51,7 +51,7 @@ Ensure AWS credentials are configured and necessary variables are defined before
 Run the playbook with:
 
 ```shell
-ansible-playbook infra.ai.teardown -i rhelai.aws_ec2.yml -e @sample_vars.yml
+ansible-playbook infra.ai.aws_teardown -i rhelai.aws_ec2.yml -e @sample_vars.yml
 ```
 
 ### Proxy Setup Playbook: infra.ai.proxy
