@@ -102,24 +102,24 @@ ansible-inventory -i inventory/rhelai.aws_ec2.yml --graph
 Launch and configure AWS resources for RHEL AI:
 
 ```shell
-ansible-playbook playbooks/aws_provision.yml -i inventory/rhelai.aws_ec2.yml -e @vars.yml
+ansible-playbook infra.ai.aws_provision.yml -i inventory/rhelai.aws_ec2.yml -e @vars.yml
 ```
 
 #### 2. Teardown Infrastructure
 Cleanly decommission provisioned AWS resources:
 
 ```shell
-ansible-playbook playbooks/aws_teardown.yml -i inventory/rhelai.aws_ec2.yml -e @vars.yml
+ansible-playbook infra.ai.aws_teardown.yml -i inventory/rhelai.aws_ec2.yml -e @vars.yml
 ```
 
 #### 3. Deploy NGINX Proxy
 Set up a reverse proxy (with SSL support) for services like instructlab:
 
 ```shell
-ansible-playbook playbooks/proxy.yml -i inventory/rhelai.aws_ec2.yml -e @vars.yml
+ansible-playbook infra.ai.proxy.yml -i inventory/rhelai.aws_ec2.yml -e @vars.yml
 ```
 
-The ``playbooks/proxy.yml`` imports the ``infra.ai.nginx_proxy`` role, but you could also use the role individually by including and setting the required variables as follows:
+The ``infra.ai.proxy.yml`` imports the ``infra.ai.nginx_proxy`` role, but you could also use the role individually by including and setting the required variables as follows:
 
 ```yml
 ---
