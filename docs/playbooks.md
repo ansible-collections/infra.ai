@@ -90,7 +90,7 @@ This playbook automates the creation of an ISO image for for provisioning a bare
 
 Before running the playbook:
  - RHAI ISO image needs to be downloaded.
-   It is available at ()[].
+   It is available at [Download Red Hat Enterprise Linux AI](https://developers.redhat.com/products/rhel-ai/download).
  - Container registry credentials for pulling RHAI updates needs to be created.
    Generate them at https://access.redhat.com/RegistryAuthentication.
 
