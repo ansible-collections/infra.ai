@@ -86,7 +86,14 @@ The ``infra.ai`` baremetal playbooks provide automation for provisioning and man
 
 ### Provisioning Playbook: infra.ai.baremetal_provision
 
-This playbook automates the creation of an ISO image for for provisioning a baremetal host.
+This playbook automates the creation of an ISO image for provisioning a baremetal host.
+
+After ISO image is built, use it to boot a baremetal host from it.
+The baremetal host will be automatically reinstalled.
+No human interaction is required.
+User is not asked for any confirmation.
+
+NOTE: if wrong host is booted from ISO, then operation system will be destoryed.
 
 Before running the playbook:
  - RHAI ISO image needs to be downloaded.
