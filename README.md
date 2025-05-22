@@ -83,10 +83,10 @@ aws configure set region                eu-central-1
 ### Set Variables
 
 ```shell
-cp aws_sample_vars.yml vars.yml
+cp sample_vars.yml vars.yml
 ```
 
-The ``aws_sample_vars.yml`` file (and other ``<provider>_sample_vars.yml`` files) provides a well-documented starting point for setting up your configuration.
+The ``sample_vars.yml`` file provides a well-documented starting point for setting up your configuration.
 You are encouraged to customize ``vars.yml`` to suit your specific environment and use case.
 
 ### View the AWS inventory graph
