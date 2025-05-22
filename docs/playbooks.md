@@ -101,5 +101,5 @@ Ensure container registry credentials are configured and necessary variables are
 Run the playbook with:
 
 ```shell
-ansible-playbook infra.ai.baremetal_provision -e @baremetal_sample_vars.yml
+ansible-playbook infra.ai.baremetal_provision -e @sample_vars.yml
 ```
