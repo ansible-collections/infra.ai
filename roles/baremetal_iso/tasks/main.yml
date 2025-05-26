@@ -21,7 +21,7 @@
         msg: "Program mkksiso not found. Please install it (sudo dnf install lorax)."
       when: mkksiso_present is failed
 
-- name: Generate RHAI kickstart file
+- name: Generate RHEL AI kickstart file
   block:
     - name: Create temporary file
       ansible.builtin.tempfile:

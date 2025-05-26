@@ -32,7 +32,7 @@
             state: absent
           when: rhelai_aws_eip | length > 0 and ec2_instance.instances | length > 0
 
-        - name: Destroy RHELAI EC2 instance
+        - name: Destroy RHEL AI EC2 instance
           ansible.builtin.include_role:
             name: cloud.aws_ops.manage_ec2_instance
           vars:
@@ -46,7 +46,7 @@
               "tag:Name": "{{ rhelai_aws_resource_name }}-vpc"
           register: vpc_info
 
-        - name: Destroy RHELAI VPC
+        - name: Destroy RHEL AI VPC
           ansible.builtin.include_role:
             name: cloud.aws_ops.ec2_networking_resources
           vars:

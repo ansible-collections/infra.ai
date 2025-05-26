@@ -96,9 +96,9 @@ User is not asked for any confirmation.
 NOTE: if wrong host is booted from ISO, then operation system will be destroyed.
 
 Before running the playbook:
- - RHAI ISO image needs to be downloaded.
+ - RHEL AI ISO image needs to be downloaded.
    It is available at [Download Red Hat Enterprise Linux AI](https://developers.redhat.com/products/rhel-ai/download).
- - Container registry credentials for pulling RHAI updates needs to be created.
+ - Container registry credentials for pulling RHEL AI updates needs to be created.
    Generate them at https://access.redhat.com/RegistryAuthentication.
 
 #### Example Usage
