@@ -8,7 +8,7 @@ The ``infra.ai`` AWS playbooks provide automation for provisioning and managing 
 - Teardown – Destroys provisioned resources to ensure a clean and complete shutdown.
 - Proxy – Sets up an NGINX reverse proxy with SSL support for secure request forwarding.
 
-### Provisioning Playbook: infra.ai.provision
+### Provisioning Playbook: infra.ai.aws_provision
 
 This playbook automates the provisioning of AWS EC2 infrastructure to host RHEL AI AMIs. It manages the creation and configuration of:
 
@@ -35,9 +35,9 @@ Run the playbook with:
 ansible-playbook infra.ai.aws_provision -i rhelai.aws_ec2.yml -e @sample_vars.yml
 ```
 
-### Teardown Playbook: infra.ai.teardown
+### Teardown Playbook: infra.ai.aws_teardown
 
-This playbook decommissions all infrastructure previously provisioned via the infra.ai.provision playbook. It is also integrated into test workflows to ensure clean-up during failures or post-integration testing.
+This playbook decommissions all infrastructure previously provisioned via the infra.ai.aws_provision playbook. It is also integrated into test workflows to ensure clean-up during failures or post-integration testing.
 
 This playbook uses the following roles:
  - **[cloud.aws_ops.aws_setup_credentials](https://github.com/redhat-cop/cloud.aws_ops/tree/main/roles/aws_setup_credentials)**
