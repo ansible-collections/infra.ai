@@ -93,7 +93,7 @@ The baremetal host will be automatically reinstalled.
 No human interaction is required.
 User is not asked for any confirmation.
 
-NOTE: if wrong host is booted from ISO, then operation system will be destoryed.
+NOTE: if wrong host is booted from ISO, then operation system will be destroyed.
 
 Before running the playbook:
  - RHAI ISO image needs to be downloaded.
