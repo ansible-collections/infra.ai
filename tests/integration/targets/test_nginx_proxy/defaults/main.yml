@@ -12,6 +12,17 @@ rhelai_aws_eip: ""
 rhelai_aws_key_name: ""
 # rhelai_aws_key_material: ""
 
+######################################## GCP variables
+rhelai_gcp_resource_name: rhelai-gcp  # Names your GCP instance
+rhelai_gcp_project: example-project-id
+rhelai_gcp_service_account_file: example-service-account.json
+rhelai_gcp_region: us-central1
+rhelai_gcp_instance_type: e2-micro
+rhelai_gcp_service_account: example-service-account@email
+rhelai_gcp_key_material: ""
+# rhelai_gcp_eip: 34.118.74.62
+rhel_gcp_instance_disk_size_gb: 100
+
 ######################################## Nginx proxy settings
 nginx_proxy_fqdn: example.tld
 nginx_proxy_install_dir: /home/ec2-user

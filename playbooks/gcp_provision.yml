@@ -2,42 +2,43 @@
 - name: Create a GCP instance
   hosts: localhost
   gather_facts: false
+  module_defaults:
+    group/gcp:
+      auth_kind: serviceaccount
+      project: "{{ rhelai_gcp_project | default('default') }}"
+      service_account_file: "{{ rhelai_gcp_service_account_file }}"
+
   tasks:
     - name: Get fixed external address
       google.cloud.gcp_compute_address_info:
-        auth_kind: serviceaccount
-        project: "{{ rhelai_gcp_project | default('default') }}"
         region: "{{ rhelai_gcp_region }}"
         filters:
           - address = "{{ rhelai_gcp_eip }}"
           - status = "RESERVED"
           - addressType = "EXTERNAL"
-        service_account_file: "{{ rhelai_gcp_service_account_file }}"
       register: gcp_address
       when: rhelai_gcp_eip is defined and rhelai_gcp_eip | length > 0
 
-    - name: Debug address creation result
-      ansible.builtin.debug:
-        var: gcp_address
-
-    - name: Set new fact as dictionary with one key set to some value
+    - name: Set address dictionary if address exists
       ansible.builtin.set_fact:
         nat_ip: "{{ {'address': gcp_address.resources[0].address} if gcp_address.resources | length > 0 else None }}"
-      when: gcp_address.resources | length > 0
+      when: gcp_address.resources is defined and gcp_address.resources | length > 0
 
-    - name: Debug address variable
-      ansible.builtin.debug:
-        var: nat_ip
+    - name: Create a network
+      google.cloud.gcp_compute_network:
+        name: "{{ rhelai_gcp_resource_name }}-network"
+        state: present
+        auto_create_subnetworks: "true"
+      register: network
 
     - name: Create a new GCP instance
       google.cloud.gcp_compute_instance:
-        auth_kind: serviceaccount
-        project: "{{ rhelai_gcp_project | default('default') }}"
         zone: "{{ rhelai_gcp_region }}-a"
         name: "{{ rhelai_gcp_resource_name }}-instance"
         machine_type: "{{ rhelai_gcp_instance_type }}"
         network_interfaces:
-          - access_configs:
+          - network: "{{ network }}"
+            access_configs:
               - network_tier: PREMIUM
                 name: "{{ rhelai_gcp_resource_name }}-ni"
                 type: ONE_TO_ONE_NAT
@@ -50,17 +51,13 @@
             device_name: "{{ rhelai_gcp_resource_name }}-device"
             mode: READ_WRITE
             initialize_params:
-              source_image: projects/rhel-gcp/global/images/rhel-ai
-              disk_size_gb: 100
+              source_image: projects/debian-cloud/global/images/debian-12-bookworm-v20250513
+              # source_image: projects/rhel-gcp/global/images/rhel-ai
+              disk_size_gb: "{{ rhel_gcp_instance_disk_size_gb | default(100) }}"
               disk_type: pd-balanced
         labels:
           environment: rhel-ai
           component: llm-serving
-        service_account_file: "{{ rhelai_gcp_service_account_file }}"
         scheduling:
           on_host_maintenance: MIGRATE
       register: result
-
-    - name: Debug instance creation result
-      ansible.builtin.debug:
-        var: result

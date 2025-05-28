@@ -5,6 +5,7 @@ for i in tests/integration/targets/*; do
         continue
     fi
 
+# aws credentials
     cat <<EOF >> "${i}/defaults/main.yml"
 aws_access_key: ${AWS_ACCESS_KEY_ID}
 aws_secret_key: ${AWS_SECRET_ACCESS_KEY}
@@ -16,5 +17,5 @@ aws_access_key_id: ${AWS_ACCESS_KEY_ID}
 aws_secret_access_key: ${AWS_SECRET_ACCESS_KEY}
 aws_region: ${AWS_REGION}
 EOF
-done
 
+done

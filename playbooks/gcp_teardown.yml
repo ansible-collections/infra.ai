@@ -2,14 +2,22 @@
 - name: Teardown Google Cloud infrastructure
   gather_facts: false
   hosts: localhost
+  module_defaults:
+    group/gcp:
+      auth_kind: serviceaccount
+      project: "{{ rhelai_gcp_project | default('default') }}"
+      service_account_file: "{{ rhelai_gcp_service_account_file }}"
+
   tasks:
     - name: Teardown infrastructure
       block:
         - name: Destroy an instance
           google.cloud.gcp_compute_instance:
-            auth_kind: serviceaccount
-            project: "{{ rhelai_gcp_project | default('default') }}"
             zone: "{{ rhelai_gcp_region }}-a"
             name: "{{ rhelai_gcp_resource_name }}-instance"
-            service_account_file: "{{ rhelai_gcp_service_account_file }}"
+            state: absent
+
+        - name: Destroy a network
+          google.cloud.gcp_compute_network:
+            name: "{{ rhelai_gcp_resource_name }}-network"
             state: absent
