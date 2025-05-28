@@ -69,7 +69,7 @@ ansible-galaxy collection install infra.ai:==1.0.0
 See [using Ansible collections](https://docs.ansible.com/ansible/devel/user_guide/collections_using.html) for more details.
 
 
-## Use Cases
+## Use Case - AWS
 
 ### Configure AWS Credentials
 
@@ -135,6 +135,44 @@ The ``infra.ai.proxy`` imports the ``infra.ai.nginx_proxy`` role, but you could 
           aws_access_key: "{{ aws_access_key | default(lookup('ansible.builtin.env', 'AWS_ACCESS_KEY')) }}"
           aws_secret_key: "{{ aws_secret_key | default(lookup('ansible.builtin.env', 'AWS_SECRET_KEY')) }}"
 ```
+
+## Use Case - baremetal
+
+The collection automates the creation of an ISO image for provisioning a baremetal host.
+
+After ISO image is built, use it to boot a baremetal host from it.
+The baremetal host will be automatically reinstalled.
+No human interaction is required.
+User is not asked for any confirmation.
+
+NOTE: if wrong host is booted from ISO, then operation system will be destoryed.
+
+Before running the playbook:
+ - RHEL AI ISO image needs to be downloaded.
+   It is available at [Download Red Hat Enterprise Linux AI](https://developers.redhat.com/products/rhel-ai/download).
+ - Container registry credentials for pulling RHEL AI updates needs to be created.
+   Generate them at https://access.redhat.com/RegistryAuthentication.
+
+### Set Variables
+
+```shell
+cp sample_vars.yml vars.yml
+vi vars.yml
+```
+
+The ``vars.yml`` file needs to be adjusted for your environment (path to downloaded ISO image etc.).
+
+### Playbooks Included in the Collection
+
+#### 1. Build ISO image
+Build ISO image:
+
+```shell
+ansible-playbook infra.ai.baremetal_provision -e @vars.yml
+```
+
+A path to ISO image is shown on screen.
+Transfer the ISO image to USB thumbdrive, and boot baremetal host from thumbdrive.
 
 ## Testing
 

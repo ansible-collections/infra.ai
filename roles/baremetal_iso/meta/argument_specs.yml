@@ -1,0 +1,104 @@
+---
+argument_specs:
+  main:
+    version_added: 1.1.0
+    short_description: A role to create ISO image for automated Red Hat AI installation on baremetal host.
+    description:
+      - A role to create ISO image for automated Red Hat AI installation on baremetal host.
+    options:
+      baremetal_iso_source_image:
+        type: str
+        description:
+          - Path to source Red Hat AI ISO image.
+          - Download it at https://developers.redhat.com/products/rhel-ai/download.
+        required: true
+      baremetal_iso_unique_name:
+        type: str
+        description:
+          - The string will be included into output ISO filename.
+          - Use it to generate unique ISO images for multiple hosts.
+        required: false
+        default: baremetal0
+      baremetal_iso_root_password_plain:
+        type: str
+        description:
+          - Root user password.
+        required: true
+      baremetal_iso_root_ssh_key:
+        type: str
+        description:
+          - Root user SSH public key.
+        default: ""
+      baremetal_iso_username:
+        type: str
+        description:
+          - Unprivileged user username.
+        default: cloud-user
+      baremetal_iso_password_plain:
+        type: str
+        description:
+          - Unprivileged user password.
+        default: ""
+      baremetal_iso_ssh_key:
+        type: str
+        description:
+          - Unprivileged user SSH public key.
+        required: true
+      baremetal_iso_registry_username:
+        type: str
+        description:
+          - Username for downloading OS updates.
+          - Generate it at https://access.redhat.com/RegistryAuthentication.
+        required: true
+      baremetal_iso_registry_password:
+        type: str
+        description:
+          - Password for downloading OS updates.
+        required: true
+      baremetal_iso_registry_host:
+        type: str
+        description:
+          - Registry containing OS updates.
+        default: registry.redhat.io
+      baremetal_iso_oci_image:
+        type: str
+        description:
+          - The image to download as an OS update.
+        required: true
+      baremetal_iso_network_mode:
+        type: str
+        description:
+          - Select static or DHCP network configuration.
+        choices:
+          - dhcp
+          - static
+        default: dhcp
+      baremetal_iso_network_address:
+        type: str
+        description:
+          - IP address for installed system.
+          - Example '192.168.122.10'
+          - Required if static network configuration is used.
+        required: false
+      baremetal_iso_network_netmask:
+        type: str
+        description:
+          - Netmask for installed system.
+          - Example '255.255.255.0'
+          - Required if static network configuration is used.
+        required: false
+      baremetal_iso_network_gateway:
+        type: str
+        description:
+          - Gateway for installed system.
+          - Example '192.168.122.1'
+          - Required if static network configuration is used.
+        required: false
+      baremetal_iso_network_nameserver:
+        type: str
+        description:
+          - DNS nameserver(s) for installed system.
+          - Multiple nameservers are specified as comma separated list.
+          - Example '1.1.1.1,1.0.0.1'
+          - Required if static network configuration is used.
+        default: 1.1.1.1,1.0.0.1

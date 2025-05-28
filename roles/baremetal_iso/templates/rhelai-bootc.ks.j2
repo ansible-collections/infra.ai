@@ -1,0 +1,61 @@
+# use the embedded container image
+ostreecontainer --url=/run/install/repo/container --transport=oci --no-signature-verification
+
+# switch bootc to point to Red Hat container image for upgrades
+%post
+bootc switch --mutate-in-place --transport registry {{ baremetal_iso_oci_image }}
+touch /etc/cloud/cloud-init.disabled
+
+cat <<EOF > /etc/sudoers.d/90-kickstart-users
+# Created by kickstart on $(date)
+# User rules for {{ baremetal_iso_username }}
+{{ baremetal_iso_username }} ALL=(ALL) NOPASSWD:ALL
+EOF
+
+# https://docs.redhat.com/en/documentation/red_hat_enterprise_linux_ai/1.4/html/updating/updating_system#updating_the_system
+PASS="$(echo -n '{{ baremetal_iso_registry_username }}:{{ baremetal_iso_registry_password }}' | base64 -w0)"
+cat <<EOF >/etc/ostree/auth.json
+{
+  "auths": {
+    "{{ baremetal_iso_registry_host }}": {
+      "auth": "$PASS"
+    }
+  }
+}
+EOF
+%end
+
+## user customizations follow
+
+# customize this for your target system network environment
+{% if baremetal_iso_network_mode == 'dhcp' %}
+network --bootproto=dhcp --device=link --activate
+{% else %}
+network --bootproto=static --device=link --ip={{ baremetal_iso_network_address }} --netmask={{ baremetal_iso_network_netmask }} --gateway={{ baremetal_iso_network_gateway }} --nameserver={{ baremetal_iso_network_nameserver }}
+{% endif %}
+
+# customize this for your target system desired disk partitioning
+clearpart --all --initlabel --disklabel=gpt
+reqpart --add-boot
+part / --grow --fstype xfs
+
+# services can also be customized via Kickstart
+firewall --disabled
+services --enabled=sshd
+
+# optionally add a user
+{% if baremetal_iso_password_plain %}
+user --name={{ baremetal_iso_username }} --groups=wheel --plaintext --password {{ baremetal_iso_password_plain }}
+{% else %}
+user --name={{ baremetal_iso_username }} --groups=wheel
+{% endif %}
+sshkey --username {{ baremetal_iso_username }} "{{ baremetal_iso_ssh_key }}"
+
+# if desired, inject an SSH key for root
+# rootpw --iscrypted locked
+rootpw --plaintext {{ baremetal_iso_root_password_plain }}
+{% if baremetal_iso_root_ssh_key %}
+sshkey --username root "{{ baremetal_iso_root_ssh_key }}"
+{% endif %}
+
+reboot

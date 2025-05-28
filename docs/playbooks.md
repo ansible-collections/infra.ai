@@ -8,7 +8,7 @@ The ``infra.ai`` AWS playbooks provide automation for provisioning and managing 
 - Teardown – Destroys provisioned resources to ensure a clean and complete shutdown.
 - Proxy – Sets up an NGINX reverse proxy with SSL support for secure request forwarding.
 
-### Provisioning Playbook: infra.ai.provision
+### Provisioning Playbook: infra.ai.aws_provision
 
 This playbook automates the provisioning of AWS EC2 infrastructure to host RHEL AI AMIs. It manages the creation and configuration of:
 
@@ -35,9 +35,9 @@ Run the playbook with:
 ansible-playbook infra.ai.aws_provision -i rhelai.aws_ec2.yml -e @sample_vars.yml
 ```
 
-### Teardown Playbook: infra.ai.teardown
+### Teardown Playbook: infra.ai.aws_teardown
 
-This playbook decommissions all infrastructure previously provisioned via the infra.ai.provision playbook. It is also integrated into test workflows to ensure clean-up during failures or post-integration testing.
+This playbook decommissions all infrastructure previously provisioned via the infra.ai.aws_provision playbook. It is also integrated into test workflows to ensure clean-up during failures or post-integration testing.
 
 This playbook uses the following roles:
  - **[cloud.aws_ops.aws_setup_credentials](https://github.com/redhat-cop/cloud.aws_ops/tree/main/roles/aws_setup_credentials)**
@@ -76,4 +76,37 @@ Run the playbook with:
 
 ```shell
 ansible-playbook infra.ai.proxy -i rhelai.aws_ec2.yml -e @sample_vars.yml
+```
+
+## Baremetal Orchestration for RHEL AI
+
+The ``infra.ai`` baremetal playbooks provide automation for provisioning and managing baremetal infrastructure in support of Red Hat Enterprise Linux AI (RHEL AI) environments. The suite includes the following key playbooks:
+
+- baremetal_provision.yml – Creates an ISO image. The ISO image is used for provisioning a baremetal host.
+
+### Provisioning Playbook: infra.ai.baremetal_provision
+
+This playbook automates the creation of an ISO image for provisioning a baremetal host.
+
+After ISO image is built, use it to boot a baremetal host from it.
+The baremetal host will be automatically reinstalled.
+No human interaction is required.
+User is not asked for any confirmation.
+
+NOTE: if wrong host is booted from ISO, then operation system will be destroyed.
+
+Before running the playbook:
+ - RHEL AI ISO image needs to be downloaded.
+   It is available at [Download Red Hat Enterprise Linux AI](https://developers.redhat.com/products/rhel-ai/download).
+ - Container registry credentials for pulling RHEL AI updates needs to be created.
+   Generate them at https://access.redhat.com/RegistryAuthentication.
+
+#### Example Usage
+
+Ensure container registry credentials are configured and necessary variables are defined before execution.
+
+Run the playbook with:
+
+```shell
+ansible-playbook infra.ai.baremetal_provision -e @sample_vars.yml
 ```
