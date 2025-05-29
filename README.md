@@ -119,7 +119,7 @@ ansible-playbook infra.ai.aws_provision -i inventory/rhelai.aws_ec2.yml -e @vars
 
 Launch and configure resources for RHEL AI using Google Cloud:
 ```shell
-ansible-playbook playbooks/gcp_provision.yml -e @vars.yml
+ansible-playbook infra.ai.gcp_provision -e @vars.yml
 ```
 
 #### 2. Teardown Infrastructure
@@ -130,7 +130,7 @@ ansible-playbook infra.ai.aws_teardown -i inventory/rhelai.aws_ec2.yml -e @vars.
 
 Cleanly decommission provisioned Google Cloud resources:
 ```shell
-ansible-playbook playbooks/gcp_teardown.yml -e @vars.yml
+ansible-playbook infra.ai.gcp_teardown -e @vars.yml
 ```
 
 #### 3. Deploy NGINX Proxy
