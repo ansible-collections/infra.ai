@@ -22,6 +22,8 @@ rhelai_gcp_service_account_file: key.json
 rhelai_gcp_key_material: |
   user:ssh-ed25519 ... your public key here ... user@email
 rhelai_gcp_eip: ""
+rhelai_gcp_instance_disk_size_gb: 100
+rhelai_gcp_image_path: projects/acme/global/images/rhel-ai
 
 ######################################## Nginx proxy settings
 nginx_proxy_fqdn: example.tld

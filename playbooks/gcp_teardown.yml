@@ -17,6 +17,11 @@
             name: "{{ rhelai_gcp_resource_name }}-instance"
             state: absent
 
+        - name: Remove firewall rule
+          google.cloud.gcp_compute_firewall:
+            name: "{{ rhelai_gcp_resource_name }}-ilab"
+            state: absent
+
         - name: Destroy a network
           google.cloud.gcp_compute_network:
             name: "{{ rhelai_gcp_resource_name }}-network"

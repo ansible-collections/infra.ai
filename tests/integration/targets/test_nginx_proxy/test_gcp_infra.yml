@@ -72,7 +72,7 @@
                 gcp_instance_info.resources[0].disks |
                 selectattr('diskSizeGb', 'defined') |
                 list | length > 0
-          when: rhel_gcp_instance_disk_size_gb is not defined
+          when: rhelai_gcp_instance_disk_size_gb is not defined
 
         - name: Check if there is a disk attached to it with the size as specified
           ansible.builtin.assert:
@@ -83,5 +83,5 @@
                 selectattr('diskSizeGb', 'defined') |
                 map(attribute='diskSizeGb') |
                 list |
-                select('equalto', rhel_gcp_instance_disk_size_gb | string) | length > 0
-          when: rhel_gcp_instance_disk_size_gb is defined
+                select('equalto', rhelai_gcp_instance_disk_size_gb | string) | length > 0
+          when: rhelai_gcp_instance_disk_size_gb is defined

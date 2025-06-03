@@ -21,7 +21,8 @@ rhelai_gcp_instance_type: e2-micro
 rhelai_gcp_service_account: example-service-account@email
 rhelai_gcp_key_material: ""
 # rhelai_gcp_eip: 34.118.74.62
-rhel_gcp_instance_disk_size_gb: 100
+rhelai_gcp_instance_disk_size_gb: 100
+rhelai_gcp_image_path: projects/acme/global/images/rhel-ai
 
 ######################################## Nginx proxy settings
 nginx_proxy_fqdn: example.tld
