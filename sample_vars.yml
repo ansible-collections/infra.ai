@@ -24,6 +24,7 @@ rhelai_gcp_key_material: |
 rhelai_gcp_eip: ""
 rhelai_gcp_instance_disk_size_gb: 100
 rhelai_gcp_image_path: projects/acme/global/images/rhel-ai
+rhelai_gcp_ansible_user: cloud-user
 
 ######################################## Nginx proxy settings
 nginx_proxy_fqdn: example.tld

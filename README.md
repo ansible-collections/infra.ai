@@ -181,7 +181,7 @@ This collection includes a playbook designed to simplify and streamline specific
 
 ### Set Variables
 
-Create the service account file and save the json cred file to be used with `rhelai_gcp_service_account_file` in the `vars.yml` file.
+Create the service account file and save the json cred file to be used with `rhelai_gcp_service_account_file` in the `vars.yml` and `rhelai.gcp.yml` files.
 ```shell
 # initialize gcloud cli tool if not already
 gcloud init
@@ -202,21 +202,13 @@ The ``vars.yml`` file needs to be adjusted for your environment (include the ser
 #### 1. Provision Infrastructure
 Launch and configure resources for RHEL AI using Google Cloud:
 ```shell
-ansible-playbook infra.ai.gcp_provision -e @vars.yml
+ansible-playbook infra.ai.gcp_provision -e @vars.yml -i inventory/rhelai.gcp.yml
 ```
 
 #### 2. Teardown Infrastructure
 Cleanly decommission provisioned Google Cloud resources:
 ```shell
-ansible-playbook infra.ai.gcp_teardown -e @vars.yml
-```
-
-### Google Cloud integration tests
-
-Run integration tests (ensure credentials are configured):
-
-```shell
-ansible-test integration [target]
+ansible-playbook infra.ai.gcp_teardown -e @vars.yml -i inventory/rhelai.gcp.yml
 ```
 
 ## Testing

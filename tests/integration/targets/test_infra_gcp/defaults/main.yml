@@ -14,16 +14,15 @@ rhelai_aws_key_name: ""
 
 ######################################## GCP variables
 rhelai_gcp_resource_name: rhelai-gcp  # Names your GCP instance
-rhelai_gcp_project: content-engineering-459314
+rhelai_gcp_project: example-project
 rhelai_gcp_service_account_file: service-account.json
 rhelai_gcp_region: us-central1
 rhelai_gcp_instance_type: e2-micro
-rhelai_gcp_service_account: 151309912866-compute@developer.gserviceaccount.com
+rhelai_gcp_service_account: xxx-compute@developer.gserviceaccount.com
 rhelai_gcp_key_material: ""
 # rhelai_gcp_eip: 34.118.74.62
 rhelai_gcp_instance_disk_size_gb: 100
-rhelai_gcp_image_path: projects/content-engineering-459314/global/images/image-1
-# rhelai_gcp_image_path: projects/acme/global/images/rhel-ai
+rhelai_gcp_image_path: projects/acme/global/images/rhel-ai
 rhelai_gcp_ansible_user: cloud-user
 
 ######################################## Nginx proxy settings

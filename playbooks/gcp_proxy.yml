@@ -3,7 +3,7 @@
   gather_facts: false
   hosts: all
   vars:
-    ansible_user: cloud-user
+    ansible_user: "{{ rhelai_gcp_ansible_user | default('cloud-user') }}"
     ansible_ssh_extra_args: "-o StrictHostKeyChecking=no"
   roles:
     - role: infra.ai.nginx_proxy
