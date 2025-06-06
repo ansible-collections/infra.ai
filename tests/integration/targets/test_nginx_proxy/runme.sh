@@ -3,7 +3,7 @@
 set -eu
 
 function cleanup {
-    ansible-playbook infra.ai.aws_teardown -e @defaults/main.yml
+    ansible-playbook infra.ai.aws_teardown -i rhelai.aws_ec2.yml -e @defaults/main.yml
     unset ANSIBLE_CACHE_PLUGIN
     unset ANSIBLE_CACHE_PLUGIN_CONNECTION
 }
