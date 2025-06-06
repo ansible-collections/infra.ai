@@ -1,0 +1,32 @@
+---
+######################################## Instructlab variables
+rhelai_aws_instance_type: t2.micro  # AWS instance type out of g6 family
+rhelai_aws_rhelai_ami: ami-043baf7ad7d67ea00  # AMI for RHEL 9 on AWS
+
+######################################## AWS variables
+rhelai_aws_resource_name: "rhelai"  # Names your EC2 instance
+rhelai_aws_aws_region: eu-central-1
+rhelai_aws_vpc_cidr: "10.0.0.0/16"
+rhelai_aws_subnet_cidr: "10.0.1.0/24"
+rhelai_aws_eip: ""
+rhelai_aws_key_name: ""
+# rhelai_aws_key_material: ""
+
+######################################## GCP variables
+rhelai_gcp_resource_name: rhelai-gcp  # Names your GCP instance
+rhelai_gcp_project: content-engineering-459314
+rhelai_gcp_service_account_file: service-account.json
+rhelai_gcp_region: us-central1
+rhelai_gcp_instance_type: e2-micro
+rhelai_gcp_service_account: 151309912866-compute@developer.gserviceaccount.com
+rhelai_gcp_key_material: ""
+# rhelai_gcp_eip: 34.118.74.62
+rhelai_gcp_instance_disk_size_gb: 100
+rhelai_gcp_image_path: projects/content-engineering-459314/global/images/image-1
+# rhelai_gcp_image_path: projects/acme/global/images/rhel-ai
+rhelai_gcp_ansible_user: cloud-user
+
+######################################## Nginx proxy settings
+nginx_proxy_fqdn: example.tld
+nginx_proxy_install_dir: /home/ec2-user
+nginx_proxy_tls_organization_name: ACME Ltd.
