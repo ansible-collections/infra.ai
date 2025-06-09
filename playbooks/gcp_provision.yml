@@ -1,0 +1,97 @@
+---
+- name: Create a GCP instance
+  hosts: localhost
+  gather_facts: false
+  module_defaults:
+    group/gcp:
+      auth_kind: serviceaccount
+      project: "{{ rhelai_gcp_project | default('default') }}"
+      service_account_file: "{{ rhelai_gcp_service_account_file }}"
+
+  tasks:
+    - name: Get fixed external address
+      google.cloud.gcp_compute_address_info:
+        region: "{{ rhelai_gcp_region }}"
+        filters:
+          - address = "{{ rhelai_gcp_eip }}"
+          - status = "RESERVED"
+          - addressType = "EXTERNAL"
+      register: gcp_address
+      when: rhelai_gcp_eip is defined and rhelai_gcp_eip | length > 0
+
+    - name: Set address dictionary if address exists
+      ansible.builtin.set_fact:
+        nat_ip: "{{ {'address': gcp_address.resources[0].address} if gcp_address.resources | length > 0 else None }}"
+      when: gcp_address.resources is defined and gcp_address.resources | length > 0
+
+    - name: Create a network
+      google.cloud.gcp_compute_network:
+        name: "{{ rhelai_gcp_resource_name }}-network"
+        state: present
+        auto_create_subnetworks: "true"
+      register: network
+
+    - name: Wait for network to be ready
+      google.cloud.gcp_compute_network_info:
+        filters:
+          - name = "{{ rhelai_gcp_resource_name }}-network"
+      register: network_info
+      until: network_info.resources | length > 0
+      retries: 3
+      delay: 5
+
+    - name: Add a firewall rule to allow SSH and https
+      google.cloud.gcp_compute_firewall:
+        name: "{{ rhelai_gcp_resource_name }}-ilab"
+        network: "{{ network_info.resources[0] }}"
+        direction: INGRESS
+        priority: 1000
+        source_ranges:
+          - "0.0.0.0/0"
+        allowed:
+          - ip_protocol: tcp
+            ports:
+              - "22"
+              - "8443"
+
+    - name: Create a new GCP instance
+      google.cloud.gcp_compute_instance:
+        zone: "{{ rhelai_gcp_region }}-a"
+        name: "{{ rhelai_gcp_resource_name }}-instance"
+        machine_type: "{{ rhelai_gcp_instance_type }}"
+        network_interfaces:
+          - network: "{{ network }}"
+            access_configs:
+              - network_tier: PREMIUM
+                name: "{{ rhelai_gcp_resource_name }}-ni"
+                type: ONE_TO_ONE_NAT
+                nat_ip: "{{ nat_ip is defined | ternary(nat_ip, omit) }}"
+        metadata:
+          ssh-keys: "{{ rhelai_gcp_key_material }}"
+        disks:
+          - auto_delete: true
+            boot: true
+            device_name: "{{ rhelai_gcp_resource_name }}-device"
+            mode: READ_WRITE
+            initialize_params:
+              source_image: "{{ rhelai_gcp_image_path | default('projects/' + rhelai_gcp_project + '/global/images/rhel-ai') }}"
+              disk_size_gb: "{{ rhelai_gcp_instance_disk_size_gb | default(100) }}"
+              disk_type: pd-balanced
+        labels:
+          environment: rhel-ai
+          component: llm-serving
+        scheduling:
+          on_host_maintenance: MIGRATE
+      register: result
+
+    - name: Show result of instance creation
+      ansible.builtin.debug:
+        msg: "Instance creation result: {{ result }}"
+
+    - name: Show the external IP address
+      ansible.builtin.debug:
+        msg: "Successfuly created a new instance: {{ result.networkInterfaces[0].accessConfigs[0].natIP }}"
+      when:
+        result is defined and
+        result.networkInterfaces | length > 0 and
+        result.networkInterfaces[0].accessConfigs[0].natIP is defined

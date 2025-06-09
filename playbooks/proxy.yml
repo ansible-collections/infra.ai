@@ -4,8 +4,6 @@
   hosts: all
   roles:
     - role: infra.ai.nginx_proxy
-      nginx_proxy_fqdn: example.com
-      nginx_proxy_install_dir: /var/home/cloud-user
       module_defaults:
         group/aws:
           region: "{{ aws_region | default(lookup('ansible.builtin.env', 'AWS_REGION')) }}"

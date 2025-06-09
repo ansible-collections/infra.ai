@@ -13,6 +13,7 @@ This collection is curated to provide users with a robust set of roles and playb
 To use this collection, the following dependencies MUST be installed:
 - [amazon.aws](https://github.com/ansible-collections/amazon.aws)
 - [cloud.aws_ops](https://github.com/redhat-cop/cloud.aws_ops)
+- [google.cloud](https://docs.ansible.com/ansible/latest/collections/google/cloud/index.html)
 
 <!--start requires_ansible-->
 ### Ansible Version Compatibility
@@ -71,15 +72,6 @@ See [using Ansible collections](https://docs.ansible.com/ansible/devel/user_guid
 
 ## Use Case - AWS
 
-### Configure AWS Credentials
-
-```shell
-# using the "default" profile on AWS
-aws configure set aws_access_key_id     my-access-key
-aws configure set aws_secret_access_key my-secret-key
-aws configure set region                eu-central-1
-```
-
 ### Set Variables
 
 ```shell
@@ -88,6 +80,17 @@ cp sample_vars.yml vars.yml
 
 The ``sample_vars.yml`` file provides a well-documented starting point for setting up your configuration.
 You are encouraged to customize ``vars.yml`` to suit your specific environment and use case.
+
+
+### Using AWS infrastructure
+
+Create the default AWS credentials
+```shell
+# using the "default" profile on AWS
+aws configure set aws_access_key_id     my-access-key
+aws configure set aws_secret_access_key my-secret-key
+aws configure set region                eu-central-1
+```
 
 ### View the AWS inventory graph
 
@@ -100,14 +103,12 @@ ansible-inventory -i inventory/rhelai.aws_ec2.yml --graph
 
 #### 1. Provision Infrastructure
 Launch and configure AWS resources for RHEL AI:
-
 ```shell
 ansible-playbook infra.ai.aws_provision -i inventory/rhelai.aws_ec2.yml -e @vars.yml
 ```
 
 #### 2. Teardown Infrastructure
 Cleanly decommission provisioned AWS resources:
-
 ```shell
 ansible-playbook infra.ai.aws_teardown -i inventory/rhelai.aws_ec2.yml -e @vars.yml
 ```
@@ -174,6 +175,42 @@ ansible-playbook infra.ai.baremetal_provision -e @vars.yml
 A path to ISO image is shown on screen.
 Transfer the ISO image to USB thumbdrive, and boot baremetal host from thumbdrive.
 
+## Use Case - Google Cloud
+
+This collection includes a playbook designed to simplify and streamline specific Google Cloud Platform (GCP) operations.
+
+### Set Variables
+
+Create the service account file and save the json cred file to be used with `rhelai_gcp_service_account_file` in the `vars.yml` and `rhelai.gcp.yml` files.
+```shell
+# initialize gcloud cli tool if not already
+gcloud init
+
+# generate the service account file
+gcloud iam service-accounts keys create <path_to_json_cred_output_file> --iam-account=<iam_account>
+```
+
+```shell
+cp sample_vars.yml vars.yml
+vi vars.yml
+```
+
+The ``vars.yml`` file needs to be adjusted for your environment (include the service account file).
+
+### Playbooks Included in the Collection
+
+#### 1. Provision Infrastructure
+Launch and configure resources for RHEL AI using Google Cloud:
+```shell
+ansible-playbook infra.ai.gcp_provision -e @vars.yml -i inventory/rhelai.gcp.yml
+```
+
+#### 2. Teardown Infrastructure
+Cleanly decommission provisioned Google Cloud resources:
+```shell
+ansible-playbook infra.ai.gcp_teardown -e @vars.yml -i inventory/rhelai.gcp.yml
+```
+
 ## Testing
 
 This Collection uses `ansible-lint` and `black`.
@@ -190,18 +227,12 @@ Sanity and unit tests are run as normal:
 ansible-test sanity
 ```
 
-Run integration tests (ensure AWS credentials are configured):
-
-```shell
-ansible-test integration [target]
-```
-
 ## Release Notes and Roadmap
 
-Consult the CHANGELOG.rst included in the collection for details.
+For details about changes, consult the [CHANGELOG](./CHANGELOG.rst) included in the collection.
 
 ## License
 
 GNU General Public License v3.0 or later
 
-Consult the LICENSE included in the collection to see the full text.
+Consult the [LICENSE](./LICENSE) file included in the collection to see the full text.

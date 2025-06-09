@@ -1,0 +1,28 @@
+---
+- name: Teardown Google Cloud infrastructure
+  gather_facts: false
+  hosts: localhost
+  module_defaults:
+    group/gcp:
+      auth_kind: serviceaccount
+      project: "{{ rhelai_gcp_project | default('default') }}"
+      service_account_file: "{{ rhelai_gcp_service_account_file }}"
+
+  tasks:
+    - name: Teardown infrastructure
+      block:
+        - name: Destroy an instance
+          google.cloud.gcp_compute_instance:
+            zone: "{{ rhelai_gcp_region }}-a"
+            name: "{{ rhelai_gcp_resource_name }}-instance"
+            state: absent
+
+        - name: Remove firewall rule
+          google.cloud.gcp_compute_firewall:
+            name: "{{ rhelai_gcp_resource_name }}-ilab"
+            state: absent
+
+        - name: Destroy a network
+          google.cloud.gcp_compute_network:
+            name: "{{ rhelai_gcp_resource_name }}-network"
+            state: absent

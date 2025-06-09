@@ -18,8 +18,8 @@ ExecStart=/usr/bin/podman run \
 	--replace \
 	--name nginx-proxy \
 	--net host \
-	-v /var/home/cloud-user/nginx/conf.d:/etc/nginx/conf.d:ro,Z \
-	-v /var/home/cloud-user/nginx/ssl:/etc/nginx/ssl:ro,Z docker.io/library/nginx:1.27.5
+	-v {{ nginx_proxy_install_dir }}/nginx/conf.d:/etc/nginx/conf.d:ro,Z \
+	-v {{ nginx_proxy_install_dir }}/nginx/ssl:/etc/nginx/ssl:ro,Z docker.io/library/nginx:1.27.5
 ExecStop=/usr/bin/podman stop \
 	--ignore -t 10 \
 	--cidfile=%t/%n.ctr-id

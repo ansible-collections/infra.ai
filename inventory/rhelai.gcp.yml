@@ -1,0 +1,9 @@
+plugin: google.cloud.gcp_compute
+
+projects:
+  - example-project-id
+auth_kind: serviceaccount
+service_account_file: service-account.json
+filters:
+  - status = running
+  - labels.environment = rhel-ai

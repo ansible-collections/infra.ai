@@ -110,3 +110,45 @@ Run the playbook with:
 ```shell
 ansible-playbook infra.ai.baremetal_provision -e @sample_vars.yml
 ```
+
+## Google Cloud Orchestration for RHEL AI
+
+Google Cloud ``infra.ai`` playbooks provide automation for provisioning and managing GCP infrastructure in support of Red Hat Enterprise Linux AI (RHEL AI) environments.
+The suite includes the following key playbooks:
+
+- Provision – Launches and configures Google Cloud resources needed to deploy RHEL AI.
+- Teardown – Destroys provisioned resources to ensure a clean and complete shutdown.
+
+### Provisioning Playbook: infra.ai.gcp_provision
+
+This playbook automates the provisioning of Google Cloud VM instances to host RHEL AI. It manages the creation and configuration of:
+
+- Key pairs
+- Addresses
+- VM instances
+
+Resources are automatically prefixed using the ``rhelai_gcp_resource_name`` variable, which can be defined in your variable file for naming consistency.
+
+#### Example Usage
+
+Ensure Google Cloud account is set, the credentials are configured and necessary variables are defined before execution.
+
+Run the playbook with:
+
+```shell
+ansible-playbook infra.ai.gcp_provision -e @vars.yml
+```
+
+### Teardown Playbook: infra.ai.gcp_teardown
+
+This playbook decommissions all infrastructure previously provisioned via the `infra.ai.gcp_provision` playbook. It is also integrated into test workflows to ensure clean-up during failures or post-integration testing.
+
+#### Example Usage
+
+Ensure Google Cloud account is set, the credentials are configured and necessary variables are defined before execution.
+
+Run the playbook with:
+
+```shell
+ansible-playbook infra.ai.gcp_teardown -e @vars.yml
+```

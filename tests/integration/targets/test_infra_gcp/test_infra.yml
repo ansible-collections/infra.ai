@@ -1,0 +1,87 @@
+---
+- name: Test GCP infrastructure connectivity
+  hosts: localhost
+  gather_facts: false
+  module_defaults:
+    group/gcp:
+      auth_kind: serviceaccount
+      project: "{{ rhelai_gcp_project | default('default') }}"
+      service_account_file: "{{ rhelai_gcp_service_account_file }}"
+
+  tasks:
+    - name: Check if instance exists
+      google.cloud.gcp_compute_instance_info:
+        filters:
+          - name = "{{ rhelai_gcp_resource_name }}-instance"
+        zone: "{{ rhelai_gcp_region }}-a"
+      register: gcp_instance_info
+
+    - name: Pre-provisioning tests
+      when: action == "pre"
+      block:
+        - name: Assert instance does not exist
+          ansible.builtin.assert:
+            that:
+              - gcp_instance_info.resources | length == 0
+
+    - name: Post-provisioning tests
+      when: action == "post"
+      block:
+        - name: Assert instance exists
+          ansible.builtin.assert:
+            that:
+              - gcp_instance_info.resources | length == 1
+              - gcp_instance_info.resources[0].status == "RUNNING"
+              - gcp_instance_info.resources[0].machineType is search(rhelai_gcp_instance_type)
+
+        - name: Check if assigned IP is correct
+          ansible.builtin.assert:
+            that:
+              - >
+                gcp_instance_info.resources[0].networkInterfaces is defined and
+                gcp_instance_info.resources[0].networkInterfaces |
+                selectattr('accessConfigs', 'defined') |
+                selectattr('accessConfigs', '!=', None) |
+                map(attribute='accessConfigs') |
+                sum(start=[]) |
+                selectattr('natIP', 'defined') |
+                map(attribute='natIP') |
+                list |
+                select('equalto', rhelai_gcp_eip) | length > 0
+          when: rhelai_gcp_eip is defined and rhelai_gcp_eip | length > 0
+
+        - name: Check if there is an assigned IP
+          ansible.builtin.assert:
+            that:
+              - >
+                gcp_instance_info.resources[0].networkInterfaces is defined and
+                gcp_instance_info.resources[0].networkInterfaces |
+                selectattr('accessConfigs', 'defined') |
+                selectattr('accessConfigs', '!=', None) |
+                map(attribute='accessConfigs') |
+                sum(start=[]) |
+                selectattr('natIP', 'defined') |
+                list | length > 0
+          when: rhelai_gcp_eip is not defined or rhelai_gcp_eip | length == 0
+
+        - name: Check if there is a disk attached to it with the size as specified
+          ansible.builtin.assert:
+            that:
+              - >
+                gcp_instance_info.resources[0].disks is defined and
+                gcp_instance_info.resources[0].disks |
+                selectattr('diskSizeGb', 'defined') |
+                list | length > 0
+          when: rhelai_gcp_instance_disk_size_gb is not defined
+
+        - name: Check if there is a disk attached to it with the size as specified
+          ansible.builtin.assert:
+            that:
+              - >
+                gcp_instance_info.resources[0].disks is defined and
+                gcp_instance_info.resources[0].disks |
+                selectattr('diskSizeGb', 'defined') |
+                map(attribute='diskSizeGb') |
+                list |
+                select('equalto', rhelai_gcp_instance_disk_size_gb | string) | length > 0
+          when: rhelai_gcp_instance_disk_size_gb is defined
