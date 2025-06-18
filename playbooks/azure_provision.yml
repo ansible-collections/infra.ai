@@ -1,0 +1,45 @@
+---
+- name: Provision Azure infrastructure
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Create resource group
+      ansible.builtin.include_role:
+        name: cloud.azure_ops.azure_manage_resource_group
+      vars:
+        azure_manage_resource_group_operation: create
+        azure_manage_resource_group_region: "{{ rhelai_azure_region }}"
+        azure_manage_resource_group_name: "{{ rhelai_azure_resource_group_name }}"
+        azure_manage_resource_group_tags: "{{ rhelai_azure_tags }}"
+
+    - name: Create VM
+      ansible.builtin.include_role:
+        name: cloud.azure_ops.azure_virtual_machine_with_public_ip
+      vars:
+        azure_virtual_machine_with_public_ip_operation: create
+        azure_virtual_machine_with_public_ip_resource_group: "{{ rhelai_azure_resource_group_name }}"
+        azure_virtual_machine_with_public_ip_region: "{{ rhelai_azure_region }}"
+        azure_virtual_machine_with_public_ip_tags: "{{ rhelai_azure_tags }}"
+        azure_virtual_machine_with_public_ip_vm:
+          name: "{{ rhelai_azure_vm_name }}"
+          admin_username: "{{ rhelai_azure_admin_username }}"
+          # admin_password: "{{ rhelai_azure_admin_password }}"
+          ssh_pw_enabled: false
+          ssh_public_keys: "{{ rhelai_azure_ssh_keys }}"
+          size: "{{ rhelai_azure_vm_size }}"
+          vnet_address_prefixes_cidr: "{{ rhelai_azure_vnet_address_prefixes_cidr }}"
+          subnet_address_prefixes_cidr: "{{ rhelai_azure_subnet_address_prefixes_cidr }}"
+          os: Linux
+          image:
+            offer: rh-rhel-ai
+            publisher: RedHat
+            sku: "{{ rhelai_azure_image_sku }}"
+            version: latest
+          # az vm image list --all --publisher RedHat --offer rh-rhel-ai --sku rh-rhelai-nvidia-1gpu-gen2
+          plan:
+            name: "{{ rhelai_azure_image_sku }}"
+            product: rh-rhel-ai
+            publisher: redhat
+          accept_terms: true
+          managed_disk_type: "{{ rhelai_azure_managed_disk_type }}"
+        # azure_virtual_machine_with_public_ip_delete_resource_group: false

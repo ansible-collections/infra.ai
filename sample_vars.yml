@@ -37,3 +37,22 @@ rhelai_baremetal_ssh_key: "ssh-ed25519 AAAA... comment"
 rhelai_baremetal_registry_username:
 rhelai_baremetal_registry_password:
 rhelai_baremetal_source_image: /path/to/rhel-ai-nvidia-1.4-1739107830-x86_64-boot.iso
+
+######################################## Azure variables
+rhelai_azure_region: eastus
+rhelai_azure_tags:
+  Environment: RHEL-AI
+  Component: LLM-Serving
+rhelai_azure_resource_group_name: my-rg0
+rhelai_azure_admin_username: redhat
+# rhelai_azure_admin_password: redhatp
+rhelai_azure_ssh_keys:
+  - path: /home/{{ rhelai_azure_admin_username }}/.ssh/authorized_keys
+    key_data: "ssh-ed25519 AAAAC3... comment"
+rhelai_azure_vm_name: my-vm0
+# GPU count from sku and size need to match.
+rhelai_azure_vm_size: Standard_NC4as_T4_v3  # Standard_B1ms
+rhelai_azure_image_sku: rh-rhelai-nvidia-1gpu
+rhelai_azure_vnet_address_prefixes_cidr: 10.0.0.0/16
+rhelai_azure_subnet_address_prefixes_cidr: 10.0.1.0/24
+rhelai_azure_managed_disk_type: Standard_LRS

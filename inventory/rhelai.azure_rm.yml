@@ -1,0 +1,8 @@
+# azure ansible dynamic inventory plugin
+plugin: azure.azcollection.azure_rm
+
+# include_vm_resource_groups:
+#   - my-rg1
+use_extra_vars: true
+hostvar_expressions:
+  ansible_user: "rhelai_azure_admin_username"
