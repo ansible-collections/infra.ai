@@ -8,7 +8,7 @@ The ``infra.ai`` AWS playbooks provide automation for provisioning and managing 
 - Teardown – Destroys provisioned resources to ensure a clean and complete shutdown.
 - Proxy – Sets up an NGINX reverse proxy with SSL support for secure request forwarding.
 
-### Provisioning Playbook: infra.ai.aws_provision
+### AWS Provisioning Playbook: infra.ai.aws_provision
 
 This playbook automates the provisioning of AWS EC2 infrastructure to host RHEL AI AMIs. It manages the creation and configuration of:
 
@@ -35,7 +35,7 @@ Run the playbook with:
 ansible-playbook infra.ai.aws_provision -i rhelai.aws_ec2.yml -e @sample_vars.yml
 ```
 
-### Teardown Playbook: infra.ai.aws_teardown
+### AWS Teardown Playbook: infra.ai.aws_teardown
 
 This playbook decommissions all infrastructure previously provisioned via the infra.ai.aws_provision playbook. It is also integrated into test workflows to ensure clean-up during failures or post-integration testing.
 
@@ -151,4 +151,53 @@ Run the playbook with:
 
 ```shell
 ansible-playbook infra.ai.gcp_teardown -e @vars.yml
+```
+
+## Azure Orchestration for RHEL AI
+
+The ``infra.ai`` playbooks provide automation for provisioning and managing cloud infrastructure in support of Red Hat Enterprise Linux AI (RHEL AI) environments in Azure.
+The suite includes the following key playbooks:
+
+- Provision – Launches and configures Azure resources needed to deploy RHEL AI.
+- Teardown – Destroys provisioned Azure resources to ensure a clean and complete shutdown.
+
+### Azure Provisioning Playbook: infra.ai.azure_provision
+
+This playbook automates the provisioning of Azure infrastructure to host RHEL AI AMIs. It manages the creation and configuration of:
+
+- Key pairs
+- Virtual networking components
+- Security groups
+- Azure VMs
+
+Resources are automatically tagged using the tags defined by ``rhelai_azure_tags`` variable.
+The ``rhelai_azure_tags`` variable can be defined in your variable file.
+
+This playbook includes the following roles:
+
+ - **[cloud.azure_ops.azure_manage_resource_group](https://github.com/redhat-cop/cloud.azure_ops/tree/main/roles/azure_manage_resource_group)**
+ - **[cloud.azure_ops.azure_virtual_machine_with_public_ip](https://github.com/redhat-cop/cloud.azure_ops/tree/main/roles/azure_virtual_machine_with_public_ip)**
+
+#### Example Usage
+
+Ensure Azure credentials are configured and necessary variables are defined before execution.
+
+```shell
+ansible-playbook infra.ai.azure_provision -i localhost, -e @sample_vars.yml
+```
+
+### Azure Teardown Playbook: infra.ai.azure_teardown
+
+This playbook decommissions all infrastructure previously provisioned via the infra.ai.azure_provision playbook.
+
+This playbook uses the following roles:
+ - **[cloud.azure_ops.azure_manage_resource_group](https://github.com/redhat-cop/cloud.azure_ops/tree/main/roles/azure_manage_resource_group)**
+ - **[cloud.azure_ops.azure_virtual_machine_with_public_ip](https://github.com/redhat-cop/cloud.azure_ops/tree/main/roles/azure_virtual_machine_with_public_ip)**
+
+#### Example Usage
+
+Ensure Azure credentials are configured and necessary variables are defined before execution.
+
+```shell
+ansible-playbook infra.ai.azure_teardown -i localhost, -e @sample_vars.yml
 ```

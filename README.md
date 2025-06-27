@@ -14,6 +14,7 @@ To use this collection, the following dependencies MUST be installed:
 - [amazon.aws](https://github.com/ansible-collections/amazon.aws)
 - [cloud.aws_ops](https://github.com/redhat-cop/cloud.aws_ops)
 - [google.cloud](https://docs.ansible.com/ansible/latest/collections/google/cloud/index.html)
+- [cloud.azure_ops](https://github.com/redhat-cop/cloud.azure_ops)
 
 <!--start requires_ansible-->
 ### Ansible Version Compatibility
@@ -101,13 +102,13 @@ ansible-inventory -i inventory/rhelai.aws_ec2.yml --graph
 
 ### Playbooks Included in the Collection
 
-#### 1. Provision Infrastructure
+#### 1. Provision AWS Infrastructure
 Launch and configure AWS resources for RHEL AI:
 ```shell
 ansible-playbook infra.ai.aws_provision -i inventory/rhelai.aws_ec2.yml -e @vars.yml
 ```
 
-#### 2. Teardown Infrastructure
+#### 2. Teardown AWS Infrastructure
 Cleanly decommission provisioned AWS resources:
 ```shell
 ansible-playbook infra.ai.aws_teardown -i inventory/rhelai.aws_ec2.yml -e @vars.yml
@@ -199,16 +200,49 @@ The ``vars.yml`` file needs to be adjusted for your environment (include the ser
 
 ### Playbooks Included in the Collection
 
-#### 1. Provision Infrastructure
+#### 1. Provision GCP Infrastructure
 Launch and configure resources for RHEL AI using Google Cloud:
 ```shell
 ansible-playbook infra.ai.gcp_provision -e @vars.yml -i inventory/rhelai.gcp.yml
 ```
 
-#### 2. Teardown Infrastructure
+#### 2. Teardown GCP Infrastructure
 Cleanly decommission provisioned Google Cloud resources:
 ```shell
 ansible-playbook infra.ai.gcp_teardown -e @vars.yml -i inventory/rhelai.gcp.yml
+```
+
+## Use Case - Azure
+
+Installing this ansible collection (`infra.ai`) will automatically install other required ansible collections.
+However required python modules still need to be installed.
+In particular the `azure.azcollection` requires to run additional `pip install ...` command.
+For details see [azure.azcollection requirements](https://github.com/ansible-collections/azure?tab=readme-ov-file#requirements).
+
+### Configure Azure Credentials
+
+```
+az login
+az resource list
+```
+
+Generate a graphical view of your AWS inventory:
+```shell
+ansible-inventory -i inventory/rhelai.azure_rm.yml --graph
+```
+
+#### 1. Provision Azure Infrastructure
+Launch and configure AWS resources for RHEL AI:
+
+```shell
+ansible-playbook infra.ai.azure_provision -i localhost, -e @vars.yml
+```
+
+#### 2. Teardown Azure Infrastructure
+Cleanly decommission provisioned AWS resources:
+
+```shell
+ansible-playbook infra.ai.azure_teardown -i localhost, -e @vars.yml
 ```
 
 ## Testing
