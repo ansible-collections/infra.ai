@@ -8,9 +8,10 @@
         rhelai_aws_key_default_name: "{{ rhelai_aws_resource_name }}-key"
       module_defaults:
         group/aws:
-          region: "{{ aws_region | default(lookup('ansible.builtin.env', 'AWS_REGION')) }}"
           aws_access_key: "{{ aws_access_key | default(lookup('ansible.builtin.env', 'AWS_ACCESS_KEY')) }}"
           aws_secret_key: "{{ aws_secret_key | default(lookup('ansible.builtin.env', 'AWS_SECRET_KEY')) }}"
+          aws_security_token: "{{ security_token | default(lookup('ansible.builtin.env', 'SECURITY_TOKEN')) }}"
+          region: "{{ aws_region | default(lookup('ansible.builtin.env', 'AWS_REGION')) }}"
 
       block:
         - name: Setup credentials
@@ -108,6 +109,7 @@
                 ports: 8443
                 cidr_ip: 0.0.0.0/0
             ec2_networking_resources_create_igw: true
+            aws_security_token: '{{ security_token | default(omit) }}'
 
         - name: Get instance info with provided name
           amazon.aws.ec2_instance_info:
@@ -132,6 +134,7 @@
               Environment: RHEL-AI
               Component: LLM-Serving
             manage_ec2_instance_wait_for_state: true
+            aws_security_token: '{{ security_token | default(omit) }}'
           when: ec2_info_result.instances is not defined or ec2_info_result.instances | length == 0
 
         - name: Associate elastic ip

@@ -225,27 +225,34 @@ jobs:
           - ansible: stable-2.18
             python: '3.13'
 
+    env:
+      source: "./source"
 
     steps:
-      # - name: Setup upterm session
-      #   uses: lhotari/action-upterm@v1
-      #   with:
-      #     limit-access-to-actor: true
-      #     limit-access-to-users: petergrlica
+      - name: Checkout collection
+        uses: actions/checkout@v3
+        with:
+          path: ${{ env.source }}
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: "0"
+      - name: Create AWS/sts session credentials
+        uses: ansible-network/github_actions/.github/actions/ansible_aws_test_provider@main
+        id: aws_test_provider
+        with:
+          collection_path: ${{ env.source }}
+          ansible_core_ci_key: ${{ secrets.ANSIBLE_CORE_CI_KEY }}
+      - name: Set AWS config path
+        run: |
+          echo "AWS_CONFIG_FILE=${{ steps.aws_test_provider.outputs.configuration_file }}" >> $GITHUB_ENV
       - name: >-
           Perform integration testing against
           Ansible version ${{ matrix.ansible }}
           under Python ${{ matrix.python }}
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: ${{ secrets.AWS_REGION }}
         # See the documentation for the following GitHub action on
         # https://github.com/ansible-community/ansible-test-gh-action/blob/main/README.md
         uses: ansible-community/ansible-test-gh-action@release/v1
         with:
           ansible-core-version: ${{ matrix.ansible }}
-          # OPTIONAL command to run before invoking `ansible-test integration`
           pre-test-cmd: tests/integration/set_env.sh
           target-python-version: ${{ matrix.python }}
           testing-type: integration
@@ -254,14 +261,13 @@ jobs:
           # note - not specifying aws_ops.git@<commit> because the action does not support it
           test-deps: >-
             ansible.netcommon
-            amazon.aws
+            'amazon.aws:<10.0.0'
             community.crypto
             git+https://github.com/redhat-cop/cloud.aws_ops.git
           # OPTIONAL If set to true, will test only against changed files,
           # which should improve CI performance. See limitations on
           # https://github.com/ansible-community/ansible-test-gh-action#pull-request-change-detection
           pull-request-change-detection: false
-
 
   check:  # This job does nothing and is only used for the branch protection
           # or multi-stage CI jobs, like making sure that all tests pass before

@@ -2,6 +2,11 @@
 
 set -eu
 
+if [[ -f .github_runner ]]; then
+    echo "Running GCP tests on GH actions currently unsupported. Exiting."
+    exit 0
+fi
+
 function cleanup {
     ansible-playbook infra.ai.gcp_teardown -e @defaults/main.yml -e rhelai_gcp_service_account_file=../service-account.json
     unset ANSIBLE_CACHE_PLUGIN

@@ -6,15 +6,12 @@
     - name: Teardown infrastructure
       module_defaults:
         group/aws:
-          region: "{{ aws_region | default(lookup('ansible.builtin.env', 'AWS_REGION')) }}"
           aws_access_key: "{{ aws_access_key | default(lookup('ansible.builtin.env', 'AWS_ACCESS_KEY')) }}"
           aws_secret_key: "{{ aws_secret_key | default(lookup('ansible.builtin.env', 'AWS_SECRET_KEY')) }}"
+          aws_security_token: "{{ security_token | default(lookup('ansible.builtin.env', 'SECURITY_TOKEN')) }}"
+          region: "{{ aws_region | default(lookup('ansible.builtin.env', 'AWS_REGION')) }}"
 
       block:
-        - name: Setup credentials
-          ansible.builtin.include_role:
-            name: cloud.aws_ops.aws_setup_credentials
-
         - name: Get the running instance
           amazon.aws.ec2_instance_info:
             filters:
@@ -39,6 +36,7 @@
             manage_ec2_instance_operation: delete
             manage_ec2_instance_instance_name: "{{ rhelai_aws_resource_name }}-instance"
             manage_ec2_instance_wait_for_state: true
+            aws_security_token: '{{ security_token | default(omit) }}'
 
         - name: Find the vpc
           amazon.aws.ec2_vpc_net_info:
@@ -52,4 +50,5 @@
           vars:
             ec2_networking_resources_operation: delete
             ec2_networking_resources_vpc_name: "{{ rhelai_aws_resource_name }}-vpc"
+            aws_security_token: '{{ security_token | default(omit) }}'
           when: vpc_info.vpcs | length > 0

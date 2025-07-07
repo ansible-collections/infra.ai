@@ -5,7 +5,7 @@ rhelai_aws_rhelai_ami: ami-043baf7ad7d67ea00  # AMI for RHEL 9 on AWS
 
 ######################################## AWS variables
 rhelai_aws_resource_name: "rhelai"  # Names your EC2 instance
-rhelai_aws_aws_region: eu-central-1
+rhelai_aws_aws_region: us-east-1
 rhelai_aws_vpc_cidr: "10.0.0.0/16"
 rhelai_aws_subnet_cidr: "10.0.1.0/24"
 rhelai_aws_eip: ""

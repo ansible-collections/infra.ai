@@ -4,9 +4,10 @@
   gather_facts: false
   module_defaults:
     group/aws:
-      region: "{{ aws_region | default(lookup('ansible.builtin.env', 'AWS_REGION')) }}"
       aws_access_key: "{{ aws_access_key | default(lookup('ansible.builtin.env', 'AWS_ACCESS_KEY')) }}"
       aws_secret_key: "{{ aws_secret_key | default(lookup('ansible.builtin.env', 'AWS_SECRET_KEY')) }}"
+      aws_security_token: "{{ security_token | default(lookup('ansible.builtin.env', 'SECURITY_TOKEN')) }}"
+      region: "{{ aws_region | default(lookup('ansible.builtin.env', 'AWS_REGION')) }}"
 
   tasks:
     - name: Pre-provisioning tests
