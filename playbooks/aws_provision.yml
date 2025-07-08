@@ -11,7 +11,8 @@
           aws_access_key: "{{ aws_access_key | default(lookup('ansible.builtin.env', 'AWS_ACCESS_KEY')) }}"
           aws_secret_key: "{{ aws_secret_key | default(lookup('ansible.builtin.env', 'AWS_SECRET_KEY')) }}"
           aws_security_token: "{{ security_token | default(lookup('ansible.builtin.env', 'SECURITY_TOKEN')) }}"
-          region: "{{ aws_region | default(lookup('ansible.builtin.env', 'AWS_REGION')) }}"
+      environment:
+        AWS_REGION: "{{ rhelai_aws_aws_region | default(lookup('ansible.builtin.env', 'AWS_REGION')) }}"
 
       block:
         - name: Setup credentials

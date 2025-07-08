@@ -1,0 +1,4 @@
+---
+- name: Provision infrastructure
+  # ansible.builtin.import_playbook: infra.ai.aws_provision
+  ansible.builtin.import_playbook: "{{ playbook_dir }}/../../../../playbooks/aws_provision.yml"

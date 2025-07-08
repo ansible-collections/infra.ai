@@ -1,0 +1,68 @@
+---
+# Labels
+#
+controller_labels:
+  - name: infra_ai
+    organization: "{{ organization | default('Default') }}"
+  - name: infra_pattern
+    organization: "{{ organization | default('Default') }}"
+  - name: run_aws_provision
+    organization: "{{ organization | default('Default') }}"
+  - name: run_aws_teardown
+    organization: "{{ organization | default('Default') }}"
+
+# Execution Environments
+#
+controller_execution_environments:
+  - name: infra-ai-ee
+    description: Allow running RHEL Infra AI.
+    # image: quay.io/portal_mvp_patterns/infra-ai-ee  # TODO
+    image: quay.io/ansible-product-demos/apd-ee-25:latest
+    pull: always
+
+# Projects
+#
+controller_projects:
+  - name: RHEL Infra AI / Project
+    organization: "{{ organization | default('Default') }}"
+    scm_branch: patterns  # TODO main
+    scm_clean: false
+    scm_delete_on_update: true
+    scm_type: git
+    scm_update_on_launch: true
+    scm_url: https://github.com/ansible-collections/infra.ai.git
+    credential: "{{ credential | default(omit, true) }}"
+
+# Job Templates
+#
+controller_templates:
+  - name: RHEL Infra AI / Provision AWS
+    description: This job template provisions RHEL AI on AWS
+    ask_inventory_on_launch: true
+    playbook: extensions/patterns/aws_provision/playbooks/run_aws_provision.yml
+    project: RHEL Infra AI / Project
+    ask_variables_on_launch: false
+    survey_enabled: true
+    labels:
+      - infra_ai
+      - infra_pattern
+      - run_aws_provision
+    # pattern.path - path to setup.yml, it is set by ansible-pattern-loader repo
+    survey_spec: "{{ lookup('file', pattern.path.replace('setup.yml', '') + 'template_surveys/aws_provision.yml') | from_yaml }}"
+    ask_credential_on_launch: true
+    execution_environment: infra-ai-ee
+  - name: RHEL Infra AI / Teardown AWS
+    description: This job template destroys RHEL AI on AWS
+    ask_inventory_on_launch: true
+    playbook: extensions/patterns/aws_provision/playbooks/run_aws_teardown.yml
+    project: RHEL Infra AI / Project
+    ask_variables_on_launch: false
+    survey_enabled: true
+    labels:
+      - infra_ai
+      - infra_pattern
+      - run_aws_teardown
+    # pattern.path - path to setup.yml, it is set by ansible-pattern-loader repo
+    survey_spec: "{{ lookup('file', pattern.path.replace('setup.yml', '') + 'template_surveys/aws_teardown.yml') | from_yaml }}"
+    ask_credential_on_launch: true
+    execution_environment: infra-ai-ee
