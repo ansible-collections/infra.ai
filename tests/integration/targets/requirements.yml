@@ -1,10 +1,10 @@
 ---
 collections:
   - name: amazon.aws
-    version: ">7.2.0,<10.0.0"
+    version: ">7.2.0"
   - community.crypto
   - ansible.posix
   - google.cloud
   - name: https://github.com/redhat-cop/cloud.aws_ops
     type: git
-    version: main
+    version: 3.2.0

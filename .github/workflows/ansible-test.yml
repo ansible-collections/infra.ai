@@ -101,7 +101,7 @@ jobs:
             ansible.netcommon
             amazon.aws
             community.crypto
-            git+https://github.com/redhat-cop/cloud.aws_ops.git
+            'git+https://github.com/redhat-cop/cloud.aws_ops.git,3.2.0'
           # OPTIONAL If set to true, will test only against changed files,
           # which should improve CI performance. See limitations on
           # https://github.com/ansible-community/ansible-test-gh-action#pull-request-change-detection
@@ -263,7 +263,7 @@ jobs:
             ansible.netcommon
             'amazon.aws:<10.0.0'
             community.crypto
-            git+https://github.com/redhat-cop/cloud.aws_ops.git
+            'git+https://github.com/redhat-cop/cloud.aws_ops.git,3.2.0'
           # OPTIONAL If set to true, will test only against changed files,
           # which should improve CI performance. See limitations on
           # https://github.com/ansible-community/ansible-test-gh-action#pull-request-change-detection
