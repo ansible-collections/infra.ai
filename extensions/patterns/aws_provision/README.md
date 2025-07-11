@@ -20,3 +20,5 @@ To use this pattern in RHDH:
 - in RHDH UI, when running preseed template:
   - use https://github.com/jcinkelj/ansible-pattern-loader, branch rhelai.
     This in turn will use https://github.com/ansible-collections/infra.ai, branch patterns
+
+Example vars to set in RHDH UI:

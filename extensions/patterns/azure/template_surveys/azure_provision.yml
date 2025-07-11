@@ -1,0 +1,82 @@
+---
+description: This wizard will guide you on how to provision RHEL AI on Azure
+name: RHEL AI Azure provision
+spec:
+- default: eastus
+  question_description: Azure region
+  question_name: Azure region
+  required: false
+  type: text
+  variable: rhelai_azure_region
+- default: myRHELAI
+  question_description: Azure resource group name
+  question_name: Azure resource group name
+  required: false
+  type: text
+  variable: rhelai_azure_resource_group_name
+- default: |
+    Component: LLM-Serving
+    Environment: RHEL-AI
+  question_description: Azure tags
+  question_name: Azure tags
+  required: false
+  type: textarea
+  variable: rhelai_azure_tags
+- default: myVM
+  question_description: Azure VM name
+  question_name: Azure VM name
+  required: false
+  type: text
+  variable: rhelai_azure_vm_name
+- default: Standard_ND6as_A100_v4
+  question_description: Azure VM size. Note - GPU count from VM size must not exceed
+    what image SKU provides.
+  question_name: Azure VM size
+  required: false
+  type: text
+  variable: rhelai_azure_vm_size
+- default: rh-rhelai-nvidia-1gpu
+  question_description: Azure Image SKU. Note - GPU count from VM size must not exceed
+    what image SKU provides.
+  question_name: Azure Image SKU
+  required: false
+  type: text
+  variable: rhelai_azure_image_sku
+- default: 10.0.0.0/16
+  question_description: Please enter Azure Vnet CIDR.
+  question_name: Azure Vnet CIDR
+  required: false
+  type: text
+  variable: rhelai_azure_vnet_address_prefixes_cidr
+- default: 10.0.1.0/24
+  question_description: Please enter Azure subnet CIDR.
+  question_name: Azure subnet CIDR
+  required: false
+  type: text
+  variable: rhelai_azure_subnet_address_prefixes_cidr
+- default: redhat
+  question_description: Please enter username for admin user.
+  question_name: Azure username for admin user
+  required: false
+  type: text
+  variable: rhelai_azure_admin_username
+- question_description: Please enter Azure SSH key material, e.g. content of a public
+    key.
+  question_name: Azure SSH key material
+  required: true
+  type: text
+  variable: rhelai_azure_key_material
+- default: |
+    - key_data: '{{ rhelai_azure_key_material }}'
+      path: /home/{{ rhelai_azure_admin_username }}/.ssh/authorized_keys
+  question_description: Please enter Azure SSH key specification for admin user.
+  question_name: Azure SSH key specification for admin user
+  required: false
+  type: textarea
+  variable: rhelai_azure_ssh_keys
+- default: Standard_LRS
+  question_description: Please enter Azure disk type.
+  question_name: Azure disk type
+  required: true
+  type: text
+  variable: rhelai_azure_managed_disk_type
