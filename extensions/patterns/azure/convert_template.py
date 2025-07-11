@@ -95,7 +95,7 @@ def convert(rhdh, old_aap):
             old_spec = [
                 oldspec
                 for oldspec in 
-                old_aap["spec"]
+                old_aap.get("spec", [])
                 if oldspec["variable"] == var_name
             ]
             if old_spec:
@@ -166,12 +166,15 @@ def main():
         with open(aap_path) as fold:
             old_aap = yaml.safe_load(fold)
     except FileNotFoundError:
+        old_aap = {}
         pass
 
     aap = convert(rhdh, old_aap)
 
     with open(aap_path, "w") as fout:
-        yaml.dump(aap, fout, indent=2, width=2, explicit_start=True)
+        fout.write("---\n")
+        fout.write(f"# Generated from {rhdh_path} by {sys.argv[0]}\n")
+        yaml.dump(aap, fout, indent=2, width=2)
 
 
 if __name__ == "__main__":

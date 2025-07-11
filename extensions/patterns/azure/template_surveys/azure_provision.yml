@@ -1,4 +1,5 @@
 ---
+# Generated from extensions/patterns/azure/template_rhdh/azure_provision.yml by extensions/patterns/azure/convert_template.py
 description: This wizard will guide you on how to provision RHEL AI on Azure
 name: RHEL AI Azure provision
 spec:
@@ -66,9 +67,8 @@ spec:
   required: true
   type: text
   variable: rhelai_azure_key_material
-- default: |
-    - key_data: '{{ rhelai_azure_key_material }}'
-      path: /home/{{ rhelai_azure_admin_username }}/.ssh/authorized_keys
+- default: "- key_data: '{{ rhelai_azure_key_material }}'\n  path: /home/{{ rhelai_azure_admin_username\
+    \ }}/.ssh/authorized_keys\n"
   question_description: Please enter Azure SSH key specification for admin user.
   question_name: Azure SSH key specification for admin user
   required: false
