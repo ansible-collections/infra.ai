@@ -1,6 +1,6 @@
-====================================================
-CHANGE THIS IN changelogs/config.yaml! Release Notes
-====================================================
+======================
+infra.ai Release Notes
+======================
 
 .. contents:: Topics
 
