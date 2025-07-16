@@ -52,18 +52,18 @@ controller_templates:
     survey_spec: "{{ lookup('file', pattern.path.replace('setup.yml', '') + 'template_surveys/azure_provision.yml') | from_yaml }}"
     ask_credential_on_launch: true
     execution_environment: infra-ai-ee
-  # - name: RHEL Infra AI / Teardown Azure
-  #   description: This job template destroys RHEL AI on Azure
-  #   ask_inventory_on_launch: true
-  #   playbook: extensions/patterns/azure/playbooks/run_azure_teardown.yml
-  #   project: RHEL Infra AI / Project
-  #   ask_variables_on_launch: false
-  #   survey_enabled: true
-  #   labels:
-  #     - infra_ai
-  #     - infra_pattern
-  #     - run_azure_teardown
-  #   # pattern.path - path to setup.yml, it is set by ansible-pattern-loader repo
-  #   survey_spec: "{{ lookup('file', pattern.path.replace('setup.yml', '') + 'template_surveys/azure_teardown.yml') | from_yaml }}"
-  #   ask_credential_on_launch: true
-  #   execution_environment: infra-ai-ee
+  - name: RHEL Infra AI / Teardown Azure
+    description: This job template destroys RHEL AI on Azure
+    ask_inventory_on_launch: true
+    playbook: extensions/patterns/azure/playbooks/run_azure_teardown.yml
+    project: RHEL Infra AI / Project
+    ask_variables_on_launch: false
+    survey_enabled: true
+    labels:
+      - infra_ai
+      - infra_pattern
+      - run_azure_teardown
+    # pattern.path - path to setup.yml, it is set by ansible-pattern-loader repo
+    survey_spec: "{{ lookup('file', pattern.path.replace('setup.yml', '') + 'template_surveys/azure_teardown.yml') | from_yaml }}"
+    ask_credential_on_launch: true
+    execution_environment: infra-ai-ee

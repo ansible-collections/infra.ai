@@ -1,0 +1,23 @@
+---
+# Generated from extensions/patterns/azure/template_rhdh/azure_teardown.yml by extensions/patterns/azure/convert_template.py
+description: This wizard will guide you on how to teardown RHEL AI on Azure
+name: RHEL AI Azure teardown
+spec:
+- default: eastus
+  question_description: Azure region
+  question_name: Azure region
+  required: false
+  type: text
+  variable: rhelai_azure_region
+- default: myRHELAI
+  question_description: Azure resource group name
+  question_name: Azure resource group name
+  required: false
+  type: text
+  variable: rhelai_azure_resource_group_name
+- default: myVM
+  question_description: Azure VM name
+  question_name: Azure VM name
+  required: false
+  type: text
+  variable: rhelai_azure_vm_name
