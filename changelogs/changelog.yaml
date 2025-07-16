@@ -1,1 +1,10 @@
-releases: {}
+ancestor: null
+releases:
+  1.1.0:
+    objects:
+      role:
+      - description: A role to create ISO image for automated Red Hat AI installation
+          on baremetal host.
+        name: baremetal_iso
+        namespace: null
+    release_date: '2025-07-16'

@@ -1,5 +1,13 @@
-Will be updated by antsibull-changelog. Do not edit this manually!
+====================================================
+CHANGE THIS IN changelogs/config.yaml! Release Notes
+====================================================
 
-See https://ansible.readthedocs.io/projects/antsibull-changelog/changelogs/ for information on how to use antsibull-changelog.
+.. contents:: Topics
 
-Check out ``changelogs/config.yaml`` for its configuration. You need to change at least the ``title`` field in there.
+v1.1.0
+======
+
+New Roles
+---------
+
+- infra.ai.baremetal_iso - A role to create ISO image for automated Red Hat AI installation on baremetal host.

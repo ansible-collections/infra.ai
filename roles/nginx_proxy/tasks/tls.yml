@@ -16,11 +16,11 @@
     organization_name: "{{ nginx_proxy_tls_organization_name }}"
     subject_alt_name:
       - "DNS:{{ nginx_proxy_fqdn }}"
-  register: csr
+  register: nginx_proxy_csr
 
 - name: Create self-signed certificate from CSR
   community.crypto.x509_certificate:
     path: ./certs/certificate.pem
-    csr_content: "{{ csr.csr }}"
+    csr_content: "{{ nginx_proxy_csr.csr }}"
     privatekey_path: ./certs/certificate.key
     provider: selfsigned
