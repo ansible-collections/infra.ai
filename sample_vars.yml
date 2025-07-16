@@ -1,9 +1,12 @@
 ---
 ######################################## Instructlab variables
-rhelai_aws_instance_type: g6.2xlarge  # AWS instance type out of g6 family
-rhelai_aws_rhelai_ami: ami-123456789  # AMI for RHEL AI on AWS
+rhelai_ilab_registry_user: ""
+rhelai_ilab_registry_password: ""
+rhelai_ilab_api_token: mytoken
 
 ######################################## AWS variables
+rhelai_aws_instance_type: g6.2xlarge  # AWS instance type out of g6 family
+rhelai_aws_rhelai_ami: ami-123456789  # AMI for RHEL AI on AWS
 rhelai_aws_resource_name: "myRHELAIInstance"  # Names your EC2 instance
 rhelai_aws_aws_region: us-east-1
 rhelai_aws_vpc_cidr: "10.0.0.0/16"
