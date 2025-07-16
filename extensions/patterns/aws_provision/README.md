@@ -11,6 +11,9 @@ Prepare in AAP:
   - copy of github PAT token is used to git clone during preseeding.
 - AWS credential
   - Used when running this pattern
+- Container registry credential
+  - Used to pull EE image
+  - name "RHEL Infra AI / EE Image Credential" (currently exactly this name must be used)
 
 To use this pattern in RHDH:
 - configure RHDH to use https://github.com/justinc1/ansible-rhdh-templates-rhel-ai/blob/develop/seed.yaml

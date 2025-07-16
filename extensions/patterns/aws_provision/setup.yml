@@ -17,7 +17,9 @@ controller_execution_environments:
   - name: infra-ai-ee
     description: Allow running RHEL Infra AI.
     # image: quay.io/portal_mvp_patterns/infra-ai-ee  # TODO
-    image: quay.io/ansible-product-demos/apd-ee-25:latest
+    # image: quay.io/ansible-product-demos/apd-ee-25:latest
+    image: ghcr.io/justinc1/infra-ai-ee:latest
+    credential: "RHEL Infra AI / EE Image Credential"
     pull: always
 
 # Projects
