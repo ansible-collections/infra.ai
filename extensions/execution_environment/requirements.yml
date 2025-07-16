@@ -1,0 +1,10 @@
+---
+collections:
+  - name: redhat.ai
+    version: 1.0.0
+  # TODO infra.ai requires ansible.cfg configured for validated content
+  # - name: infra.ai
+  #   version: 1.0.0
+  # - name: https://github.com/ansible-collections/infra.ai.git
+  #   type: git
+  #   version: main

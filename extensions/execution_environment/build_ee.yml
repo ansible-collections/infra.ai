@@ -1,0 +1,26 @@
+---
+- name: Build Execution Environment image
+  hosts: localhost
+  vars:
+    ee_image_push: true
+
+  tasks:
+    - name: Generate and publish Execution Environment
+      block:
+        - name: Include EE Builder Role
+          ansible.builtin.include_role:
+            name: infra.ee_utilities.ee_builder
+          vars:
+            ee_builder_dir_clean: false
+            ee_builder_dir: "."
+            ee_update_base_images: true
+            ee_pull_collections_from_hub: false
+            # ee_image_push: "{{ ee_image_push }}"
+            ee_registry_username: "{{ ee_registry_username | default(omit) }}"
+            ee_registry_password: "{{ ee_registry_password | default(omit) }}"
+            ee_registry_dest: "{{ (ee_registry_url + '/' + ee_registry_namespace) }}"
+            ee_prune_images: false
+            ee_list:
+              - name: "{{ ee_image_name }}"
+                skip_generation: true
+                tag: "{{ ee_image_tag }}"
