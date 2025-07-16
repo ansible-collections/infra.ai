@@ -4,7 +4,7 @@ This repository hosts the ``infra.ai`` Validated Content Collection.
 
 ## Description
 
-This collection is curated to provide users with a robust set of roles and playbooks that simplify and streamline Amazon Web Services (AWS) infrastructure operations in Red Hat Enterprise Linux AI (RHEL AI) environments.
+This collection is curated to provide users with a robust set of roles and playbooks that simplify and streamline Amazon Web Services (AWS), Google Cloud Platform (GCP) and Azure infrastructure operations in Red Hat Enterprise Linux AI (RHEL AI) environments.
 
 **Note**: This collection is provided as validated content, meaning it's intended as a flexible, customizable starting point. As such, Red Hat does not officially support this collection. For feedback or requests, please contact your Red Hat account representative.
 
