@@ -134,7 +134,7 @@ spec:
             rhelai_azure_subnet_address_prefixes_cidr: ${{ parameters.azureSubnetCidr }}
             rhelai_azure_admin_username: ${{ parameters.azureAdminUsername }}
             rhelai_azure_key_material: ${{ parameters.azureKeyMaterial }}
-            rhelai_azure_ssh_keys: 
+            rhelai_azure_ssh_keys: |
               - path: /home/${{ parameters.azureAdminUsername }}/.ssh/authorized_keys
                 key_data: ${{ parameters.azureKeyMaterial }}
             rhelai_azure_managed_disk_type: Standard_LRS
