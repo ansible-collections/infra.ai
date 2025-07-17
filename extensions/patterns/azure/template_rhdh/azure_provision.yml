@@ -60,7 +60,9 @@ spec:
         azureTags:
           title: Azure tags
           description: Azure tags
-          type: dict
+          type: object
+          additionalProperties:
+            type: string
           default:
             Environment: RHEL-AI
             Component: LLM-Serving
@@ -107,6 +109,11 @@ spec:
             Please enter Azure SSH key material, e.g. content of a public key.
           type: string
   steps:
+    - id: serializeAzureTags
+      name: Convert tags object to JSON string
+      action: roadiehq:utils:serialize:json
+      input:
+        data: ${{ parameters.azureTags }}
     - id: launch-job
       name: Launch RHEL Infra AI / Provision Azure
       action: rhaap:launch-job-template
@@ -119,7 +126,7 @@ spec:
           extraVariables:
             rhelai_azure_region: ${{ parameters.azureRegion }}
             rhelai_azure_resource_group_name: ${{ parameters.azureResourceGroupName }}
-            rhelai_azure_tags: ${{ parameters.azureTags }}
+            rhelai_azure_tags: ${{ steps.serializeAzureTags.output.serialized }}
             rhelai_azure_vm_name: ${{ parameters.azureVmName }}
             rhelai_azure_vm_size: ${{ parameters.azureVmSize }}
             rhelai_azure_image_sku: ${{ parameters.azureImageSku }}
