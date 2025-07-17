@@ -1,0 +1,56 @@
+---
+name: RHEL AI on AWS Survey
+description: RHEL AI on AWS Survey
+spec:
+  - question_name: "AWS resource name"
+    question_description: "Please enter the AWS resource name, it is used to generate name for EC2 instance and other related resources."
+    required: false
+    variable: "rhelai_aws_resource_name"
+    type: "text"
+    default: myRHELAIInstance
+  - question_name: "AWS region"
+    question_description: "Please enter the AWS region to use, e.g. 'usa-east-1'."
+    required: false
+    variable: "rhelai_aws_aws_region"
+    type: "text"
+    default: us-east-1
+  - question_name: "AWS instance type"
+    question_description: "Please enter the AWS instance type to use, e.g. 'g6.2xlarge'."
+    required: false
+    variable: "rhelai_aws_instance_type"
+    type: "text"
+    default: g6.2xlarge
+  - question_name: "AWS image AMI"
+    question_description: "Please enter AWS image AMI to use"
+    required: true
+    variable: "rhelai_aws_rhelai_ami"
+    type: "text"
+  - question_name: "AWS SSH key name"
+    question_description: "Please enter AWS SSH key name to use."
+    required: false
+    variable: "rhelai_aws_key_name"
+    type: "text"
+    default: rhelai-keyname
+  - question_name: "AWS SSH key material"
+    question_description: "Please enter AWS SSH key material, e.g. content of a public key."
+    required: false
+    variable: "rhelai_aws_key_material"
+    type: "text"
+  - question_name: "AWS VPC CIDR"
+    question_description: "Please enter AWS VPC CIDR."
+    required: false
+    variable: "rhelai_aws_vpc_cidr"
+    type: "text"
+    default: "10.0.0.0/16"
+  - question_name: "AWS VPC subnet CIDR"
+    question_description: "Please enter AWS VPC subnet CIDR."
+    required: false
+    variable: "rhelai_aws_subnet_cidr"
+    type: "text"
+    default: "10.0.1.0/24"
+  - question_name: "AWS Elastic IP"
+    question_description: "Please enter AWS Elastic IP to associate. Leave empty to allocate a new elastic IP."
+    required: false
+    variable: "rhelai_aws_eip"
+    type: "text"
+    default: ""

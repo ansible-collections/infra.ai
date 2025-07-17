@@ -1,0 +1,130 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: infra-aws-provision
+  title: RHEL AI AWS provision
+  description: This wizard will guide you on how to provision RHEL AI on AWS
+  namespace: default
+  tags:
+    - aap-operations
+    - intermediate
+    - rhel
+spec:
+  type: service
+  parameters:
+    - title: Prompts
+      description: >-
+        Provision RHEL AI on AWS.
+      required:
+        - token
+        - inventory
+        - credentials
+      properties:
+        token:
+          title: Token
+          type: string
+          description: Oauth2 token
+          ui:field: AAPTokenField
+          ui:widget: password
+          ui:backstage:
+            review:
+              show: false
+        inventory:
+          title: Inventory
+          description: Please enter the AWS inventory you want to use
+          resource: inventories
+          ui:field: AAPResourcePicker
+        credentials:
+          title: Credentials
+          description: >-
+            Select credentials for accessing the AWS.
+          type: array
+          ui:field: AAPResourcePicker
+          resource: credentials
+    - title: Survey
+      description: >-
+        Provision RHEL AI on AWS.
+      required:
+        - awsAmi
+      properties:
+        awsResourceName:
+          title: AWS resource name
+          description: AWS resource name, it is used to generate name for EC2 instance and other related resources.
+          type: string
+          default: myRHELAIInstance
+        awsRegion:
+          title: AWS region
+          description: AWS region
+          type: string
+          default: us-east-1
+        awsInstanceType:
+          title: AWS instance type
+          type: string
+          description: >-
+            Please enter the AWS instance type to use, e.g. 'g6.2xlarge'.
+          default: g6.2xlarge
+          ui:options:
+            rows: 5
+        awsAmi:
+          title: AWS image AMI
+          description: >-
+            Please enter AWS image AMI to use
+          type: string
+        awsKeyName:
+          title: AWS SSH key name
+          description: >-
+            Please enter AWS SSH key name to use
+          type: string
+          default: rhelai-keyname
+        awsKeyMaterial:
+          title: AWS SSH key material
+          description: >-
+            Please enter AWS SSH key material, e.g. content of a public key.
+          type: string
+        awsVpcCidr:
+          title: AWS VPC CIDR
+          description: >-
+            Please enter AWS VPC CIDR.
+          type: string
+          default: "10.0.0.0/16"
+        awsSubnetCidr:
+          title: AWS VPC subnet CIDR
+          description: >-
+            Please enter AWS VPC subnet CIDR.
+          type: string
+          default: "10.0.1.0/24"
+        awsEip:
+          title: AWS Elastic IP
+          description: >-
+            Please enter AWS Elastic IP to associate. Leave empty to allocate a new elastic IP.
+          type: string
+          default: ""
+  steps:
+    - id: launch-job
+      name: Launch RHEL Infra AI / Provision AWS
+      action: rhaap:launch-job-template
+      input:
+        token: ${{ parameters.token }}
+        values:
+          templateID: null
+          inventory: ${{ parameters.inventory  }}
+          credentials: ${{ parameters.credentials }}
+          extraVariables:
+            rhelai_aws_resource_name: ${{ parameters.awsResourceName }}
+            rhelai_aws_aws_region: ${{ parameters.awsRegion }}
+            rhelai_aws_instance_type: ${{ parameters.awsInstanceType }}
+            rhelai_aws_rhelai_ami: ${{ parameters.awsAmi }}
+            rhelai_aws_key_name: ${{ parameters.awsKeyName }}
+            rhelai_aws_key_material: ${{ parameters.awsKeyMaterial }}
+            rhelai_aws_vpc_cidr: ${{ parameters.awsVpcCidr }}
+            rhelai_aws_subnet_cidr: ${{ parameters.awsSubnetCidr }}
+            rhelai_aws_eip: ${{ parameters.awsEip }}
+  output:
+    text:
+      - title: Launch RHEL Infra AI / Provision AWS template executed successfully
+        content: |
+          **Job ID:** ${{ steps['launch-job'].output.data.id }}
+          **Job STATUS:** ${{ steps['launch-job'].output.data.status }}
+    links:
+      - title: View in RH AAP
+        url: ${{ steps['launch-job'].output.data.url }}

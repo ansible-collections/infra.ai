@@ -1,0 +1,28 @@
+---
+name: RHEL AI on AWS Survey
+description: RHEL AI on AWS Survey
+spec:
+  - question_name: "AWS resource name"
+    question_description: "Please enter the AWS resource name, it is used to generate name for EC2 instance and other related resources."
+    required: false
+    variable: "rhelai_aws_resource_name"
+    type: "text"
+    default: myRHELAIInstance
+  - question_name: "AWS region"
+    question_description: "Please enter the AWS region to use, e.g. 'usa-east-1'."
+    required: false
+    variable: "rhelai_aws_aws_region"
+    type: "text"
+    default: us-east-1
+  # - question_name: "AWS SSH key name"
+  #   question_description: "Please enter AWS SSH key name to use."
+  #   required: false
+  #   variable: "rhelai_aws_key_name"
+  #   type: "text"
+  #   default: rhelai-keyname
+  - question_name: "AWS Elastic IP"
+    question_description: "Please enter AWS Elastic IP to deallocate. Leave empty to deallocate an elastic IP only if it was auto-allocated."
+    required: false
+    variable: "rhelai_aws_eip"
+    type: "text"
+    default: ""
