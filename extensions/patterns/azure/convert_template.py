@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 """
 helper for RHDH ansible pattern development
 Input: RHDH template
@@ -14,6 +12,7 @@ import argparse
 _level = logging.DEBUG
 logging.basicConfig(level=_level)
 logger = logging.getLogger(__name__)
+
 
 def flatten_list_of_lists(xss):
     return [
@@ -40,6 +39,7 @@ _map_rhdh_type_to_aap_type = {
     # "list": "list",
 }
 
+
 def convert(rhdh, old_aap):
     aap = dict()
     aap.update(
@@ -62,7 +62,7 @@ def convert(rhdh, old_aap):
           title: Azure region
           description: Azure region
           type: string
-          default: eastus        
+          default: eastus
     """
     rhdh_param_propertiers = flatten_list_of_dicts([
         param["properties"]
@@ -94,16 +94,16 @@ def convert(rhdh, old_aap):
             # this is not a trivial 1-1 mapping from a RHDH param
             old_spec = [
                 oldspec
-                for oldspec in 
+                for oldspec in
                 old_aap.get("spec", [])
                 if oldspec["variable"] == var_name
             ]
             if old_spec:
                 assert len(old_spec) == 1
-                logger.warning(f"Variable {var_name} is complex, keep old value.")
+                logger.warning("Variable %s is complex, keep old value.", var_name)
                 spec = old_spec[0]
             else:
-                logger.warning(f"Variable {var_name} is complex, insert placeholder.")
+                logger.warning("Variable %s is complex, insert placeholder.", var_name)
                 spec = dict(variable=var_name)
             spec_all.append(spec)
             continue
@@ -137,27 +137,24 @@ def convert(rhdh, old_aap):
 
 def main():
     parser = argparse.ArgumentParser(
-                        description='Converter from RHDH template to AAP surway.',
-                        )
+        description='Converter from RHDH template to AAP surway.',
+    )
     parser.add_argument(
         'rhdh_path',
         help="Path to RHDH template. Example 'extensions/patterns/myusecase/template_rhdh/mytemplate.yaml'.",
-        default="extensions/patterns/azure/template_rhdh/azure_provision.yml"
-        )
-    
-    if 1:
-        args = parser.parse_args()
-        rhdh_path = args.rhdh_path
-    else:
-        # debuger
-        rhdh_path = "extensions/patterns/azure/template_rhdh/azure_provision.yml"
+        default="extensions/patterns/azure/template_rhdh/azure_provision.yml",
+    )
+
+    args = parser.parse_args()
+    rhdh_path = args.rhdh_path
+    # rhdh_path = "extensions/patterns/azure/template_rhdh/azure_provision.yml"
 
     if "template_rhdh/" not in rhdh_path:
         logger.error("Script expects 'template_rhdh/' string in path.")
         sys.exit(1)
 
     aap_path = rhdh_path.replace("template_rhdh/", "template_surveys/")
-    
+
     with open(rhdh_path) as fin:
         rhdh = yaml.safe_load(fin)
 

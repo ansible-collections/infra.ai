@@ -27,8 +27,7 @@ controller_execution_environments:
 controller_projects:
   - name: RHEL Infra AI / Project
     organization: "{{ organization | default('Default') }}"
-    # scm_branch: patterns  # TODO main
-    scm_branch: azure-pattern  # TODO main
+    scm_branch: patterns  # TODO main
     scm_clean: false
     scm_delete_on_update: true
     scm_type: git

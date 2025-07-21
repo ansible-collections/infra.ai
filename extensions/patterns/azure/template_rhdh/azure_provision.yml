@@ -77,7 +77,7 @@ spec:
             Azure VM size.
             Note - GPU count from VM size must not exceed what image SKU provides.
           type: string
-          default: Standard_ND6as_A100_v4 # Standard_B1ms - no GPU to test 
+          default: Standard_ND6as_A100_v4 # Standard_B1ms - no GPU to test
         azureImageSku:
           title: Azure Image SKU
           description: >-
