@@ -1,0 +1,14 @@
+---
+- name: Provision infrastructure
+  ansible.builtin.import_playbook: "{{ playbook_dir }}/../../../../playbooks/gcp_teardown.yml"
+
+- name: Refresh inventory
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Refresh inventory
+      ansible.builtin.meta: refresh_inventory
+
+    # - name: Show all inventory hosts
+    #   ansible.builtin.debug:
+    #     var: groups['all']

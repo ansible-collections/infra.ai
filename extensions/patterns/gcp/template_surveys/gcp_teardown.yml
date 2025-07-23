@@ -1,0 +1,21 @@
+---
+description: This wizard will guide you on how to provision RHEL AI on GCP
+name: RHEL AI GCP provision
+spec:
+- default: us-central1
+  question_description: GCP region
+  question_name: GCP region
+  required: false
+  type: text
+  variable: rhelai_gcp_region
+- question_description: GCP project ID
+  question_name: GCP project ID
+  required: true
+  type: text
+  variable: rhelai_gcp_project
+- default: myrhelai
+  question_description: GCP resource name prefix is used for names of auto-generated resources
+  question_name: GCP resource name prefix
+  required: false
+  type: text
+  variable: rhelai_gcp_resource_name

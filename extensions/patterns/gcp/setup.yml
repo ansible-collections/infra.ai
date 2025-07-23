@@ -1,0 +1,74 @@
+---
+# Labels
+#
+controller_labels:
+  - name: infra_ai
+    organization: "{{ organization | default('Default') }}"
+  - name: infra_pattern
+    organization: "{{ organization | default('Default') }}"
+  - name: run_gcp_provision
+    organization: "{{ organization | default('Default') }}"
+  - name: run_gcp_teardown
+    organization: "{{ organization | default('Default') }}"
+
+# Execution Environments
+#
+controller_execution_environments:
+  - name: infra-ai-ee
+    description: Allow running RHEL Infra AI.
+    # image: quay.io/portal_mvp_patterns/infra-ai-ee  # TODO
+    # image: quay.io/ansible-product-demos/apd-ee-25:latest
+    image: ghcr.io/justinc1/infra-ai-ee:latest
+    # "{{ credential }}" is SCM credential
+    # RHDH does not ask user for registry credentials -
+    # for time being we can only hardcode credential name.
+    # credential: "{{ credential | default(omit, true) }}"
+    credential: "RHEL Infra AI / EE Image Credential"
+    pull: always
+
+# Projects
+#
+controller_projects:
+  - name: RHEL Infra AI / Project
+    organization: "{{ organization | default('Default') }}"
+    scm_branch: patterns  # TODO main
+    scm_clean: false
+    scm_delete_on_update: true
+    scm_type: git
+    scm_update_on_launch: true
+    scm_url: https://github.com/ansible-collections/infra.ai.git
+    credential: "{{ credential | default(omit, true) }}"
+
+# Job Templates
+#
+controller_templates:
+  - name: RHEL Infra AI / Provision GCP
+    description: This job template provisions RHEL AI on GCP
+    ask_inventory_on_launch: true
+    playbook: extensions/patterns/gcp/playbooks/run_gcp_provision.yml
+    project: RHEL Infra AI / Project
+    ask_variables_on_launch: false
+    survey_enabled: true
+    labels:
+      - infra_ai
+      - infra_pattern
+      - run_gcp_provision
+    # pattern.path - path to setup.yml, it is set by ansible-pattern-loader repo
+    survey_spec: "{{ lookup('file', pattern.path.replace('setup.yml', '') + 'template_surveys/gcp_provision.yml') | from_yaml }}"
+    ask_credential_on_launch: true
+    execution_environment: infra-ai-ee
+  - name: RHEL Infra AI / Teardown GCP
+    description: This job template destroys RHEL AI on GCP
+    ask_inventory_on_launch: true
+    playbook: extensions/patterns/gcp/playbooks/run_gcp_teardown.yml
+    project: RHEL Infra AI / Project
+    ask_variables_on_launch: false
+    survey_enabled: true
+    labels:
+      - infra_ai
+      - infra_pattern
+      - run_gcp_teardown
+    # pattern.path - path to setup.yml, it is set by ansible-pattern-loader repo
+    survey_spec: "{{ lookup('file', pattern.path.replace('setup.yml', '') + 'template_surveys/gcp_teardown.yml') | from_yaml }}"
+    ask_credential_on_launch: true
+    execution_environment: infra-ai-ee
