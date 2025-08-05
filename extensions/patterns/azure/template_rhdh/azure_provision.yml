@@ -1,0 +1,149 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: infra-azure-provision
+  title: RHEL AI Azure provision
+  description: This wizard will guide you on how to provision RHEL AI on Azure
+  namespace: default
+  tags:
+    - aap-operations
+    - intermediate
+    - rhel
+spec:
+  type: service
+  parameters:
+    - title: Prompts
+      description: >-
+        Provision RHEL AI on Azure.
+      required:
+        - token
+        - inventory
+        - credentials
+      properties:
+        token:
+          title: Token
+          type: string
+          description: Oauth2 token
+          ui:field: AAPTokenField
+          ui:widget: password
+          ui:backstage:
+            review:
+              show: false
+        inventory:
+          title: Inventory
+          description: Please enter the Azure inventory you want to use
+          resource: inventories
+          ui:field: AAPResourcePicker
+        credentials:
+          title: Credentials
+          description: >-
+            Select credentials for accessing the Azure.
+          type: array
+          ui:field: AAPResourcePicker
+          resource: credentials
+    - title: Survey
+      description: >-
+        Provision RHEL AI on Azure.
+      required:
+        - azureKeyMaterial
+      properties:
+        azureRegion:
+          title: Azure region
+          description: Azure region
+          type: string
+          default: eastus
+        azureResourceGroupName:
+          title: Azure resource group name
+          description: Azure resource group name
+          type: string
+          default: myRHELAI
+        azureTags:
+          title: Azure tags
+          description: Azure tags
+          type: object
+          additionalProperties:
+            type: string
+          default:
+            Environment: RHEL-AI
+            Component: LLM-Serving
+        azureVmName:
+          title: Azure VM name
+          description: Azure VM name
+          type: string
+          default: myVM
+        azureVmSize:
+          title: Azure VM size
+          description: >-
+            Azure VM size.
+            Note - GPU count from VM size must not exceed what image SKU provides.
+          type: string
+          default: Standard_ND6as_A100_v4 # Standard_B1ms - no GPU to test
+        azureImageSku:
+          title: Azure Image SKU
+          description: >-
+            Azure Image SKU.
+            Note - GPU count from VM size must not exceed what image SKU provides.
+          type: string
+          default: rh-rhelai-nvidia-1gpu
+        azureVnetCidr:
+          title: Azure Vnet CIDR
+          description: >-
+            Please enter Azure Vnet CIDR.
+          type: string
+          default: "10.0.0.0/16"
+        azureSubnetCidr:
+          title: Azure subnet CIDR
+          description: >-
+            Please enter Azure subnet CIDR.
+          type: string
+          default: "10.0.1.0/24"
+        azureAdminUsername:
+          title: Azure username for admin user
+          description: >-
+            Please enter username for admin user.
+          type: string
+          default: redhat
+        azureKeyMaterial:
+          title: Azure SSH key material
+          description: >-
+            Please enter Azure SSH key material, e.g. content of a public key.
+          type: string
+  steps:
+    - id: serializeAzureTags
+      name: Convert tags object to JSON string
+      action: roadiehq:utils:serialize:json
+      input:
+        data: ${{ parameters.azureTags }}
+    - id: launch-job
+      name: Launch RHEL Infra AI / Provision Azure
+      action: rhaap:launch-job-template
+      input:
+        token: ${{ parameters.token }}
+        values:
+          templateID: null
+          inventory: ${{ parameters.inventory  }}
+          credentials: ${{ parameters.credentials }}
+          extraVariables:
+            rhelai_azure_region: ${{ parameters.azureRegion }}
+            rhelai_azure_resource_group_name: ${{ parameters.azureResourceGroupName }}
+            rhelai_azure_tags: ${{ steps.serializeAzureTags.output.serialized }}
+            rhelai_azure_vm_name: ${{ parameters.azureVmName }}
+            rhelai_azure_vm_size: ${{ parameters.azureVmSize }}
+            rhelai_azure_image_sku: ${{ parameters.azureImageSku }}
+            rhelai_azure_vnet_address_prefixes_cidr: ${{ parameters.azureVnetCidr }}
+            rhelai_azure_subnet_address_prefixes_cidr: ${{ parameters.azureSubnetCidr }}
+            rhelai_azure_admin_username: ${{ parameters.azureAdminUsername }}
+            rhelai_azure_key_material: ${{ parameters.azureKeyMaterial }}
+            rhelai_azure_ssh_keys: |
+              - path: /home/${{ parameters.azureAdminUsername }}/.ssh/authorized_keys
+                key_data: ${{ parameters.azureKeyMaterial }}
+            rhelai_azure_managed_disk_type: Standard_LRS
+  output:
+    text:
+      - title: Launch RHEL Infra AI / Provision Azure template executed successfully
+        content: |
+          **Job ID:** ${{ steps['launch-job'].output.data.id }}
+          **Job STATUS:** ${{ steps['launch-job'].output.data.status }}
+    links:
+      - title: View in RH AAP
+        url: ${{ steps['launch-job'].output.data.url }}

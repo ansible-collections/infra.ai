@@ -1,0 +1,18 @@
+---
+version: 3
+images:
+  base_image:
+    # 2025.07.20 - apd-ee-25:latest is same as apd-ee-25:20250429, so 20250602 is more recent
+    name: quay.io/ansible-product-demos/apd-ee-25:20250602
+dependencies:
+  galaxy: requirements.yml
+  ansible_core:
+    package_pip: ansible-core
+  ansible_runner:
+    package_pip: ansible-runner
+additional_build_steps:
+  prepend_galaxy:
+    - COPY configs/ansible.cfg /etc/ansible/ansible.cfg
+  append_galaxy:
+    - RUN ANSIBLE_GALAXY_DISABLE_GPG_VERIFY=1 ansible-galaxy collection install $ANSIBLE_GALAXY_CLI_COLLECTION_OPTS --collections-path "/usr/share/ansible/collections" azure.azcollection  # remove after this is added to requirements.yml, and updated infra.ai is released.
+    - RUN pip3 install -r /usr/share/ansible/collections/ansible_collections/azure/azcollection/requirements.txt

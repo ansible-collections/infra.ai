@@ -1,0 +1,10 @@
+---
+collections:
+  - name: redhat.ai
+    version: 1.0.0
+  # infra.ai 1.1.0 requires not-yet-released cloud.aws_ops:==3.2.0 ; we stay on infra.ai:==1.1.0 for time being
+  - name: infra.ai
+    version: 1.0.0
+  # - name: https://github.com/ansible-collections/infra.ai.git
+  #   type: git
+  #   version: main

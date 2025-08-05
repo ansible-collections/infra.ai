@@ -1,0 +1,4 @@
+---
+- name: Teardown infrastructure
+  # ansible.builtin.import_playbook: infra.ai.azure_teardown
+  ansible.builtin.import_playbook: "{{ playbook_dir }}/../../../../playbooks/azure_teardown.yml"

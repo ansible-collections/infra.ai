@@ -14,6 +14,7 @@ tags:
   - amazon
   - gcp
   - google
+  - azure
   - cloud
   - infrastructure
   - cluster
@@ -24,6 +25,7 @@ dependencies:
   cloud.aws_ops: '==3.2.0'
   ansible.posix: '>=1.4.0'
   google.cloud: '>=1.3.1'
+  azure.azcollection: '>=3.4.0'
 repository: https://github.com/ansible
 homepage: https://www.redhat.com/en/products/ai/enterprise-linux-ai
 issues: https://access.redhat.com/support/

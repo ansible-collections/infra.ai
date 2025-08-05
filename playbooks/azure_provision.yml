@@ -3,6 +3,13 @@
   hosts: localhost
   gather_facts: false
   tasks:
+    # AAP survay cannot retur list of dict variable.
+    # We use multiline text instead, and conversion is needed.
+    - name: Convert variable type
+      ansible.builtin.set_fact:
+        __rhelai_azure_tags: "{{ rhelai_azure_tags | from_yaml }}"
+        __rhelai_azure_ssh_keys: "{{ rhelai_azure_ssh_keys | from_yaml }}"
+
     - name: Create resource group
       ansible.builtin.include_role:
         name: cloud.azure_ops.azure_manage_resource_group
@@ -10,7 +17,7 @@
         azure_manage_resource_group_operation: create
         azure_manage_resource_group_region: "{{ rhelai_azure_region }}"
         azure_manage_resource_group_name: "{{ rhelai_azure_resource_group_name }}"
-        azure_manage_resource_group_tags: "{{ rhelai_azure_tags }}"
+        azure_manage_resource_group_tags: "{{ __rhelai_azure_tags }}"
 
     - name: Create VM
       ansible.builtin.include_role:
@@ -19,13 +26,13 @@
         azure_virtual_machine_with_public_ip_operation: create
         azure_virtual_machine_with_public_ip_resource_group: "{{ rhelai_azure_resource_group_name }}"
         azure_virtual_machine_with_public_ip_region: "{{ rhelai_azure_region }}"
-        azure_virtual_machine_with_public_ip_tags: "{{ rhelai_azure_tags }}"
+        azure_virtual_machine_with_public_ip_tags: "{{ __rhelai_azure_tags }}"
         azure_virtual_machine_with_public_ip_vm:
           name: "{{ rhelai_azure_vm_name }}"
           admin_username: "{{ rhelai_azure_admin_username }}"
           # admin_password: "{{ rhelai_azure_admin_password }}"
           ssh_pw_enabled: false
-          ssh_public_keys: "{{ rhelai_azure_ssh_keys }}"
+          ssh_public_keys: "{{ __rhelai_azure_ssh_keys }}"
           size: "{{ rhelai_azure_vm_size }}"
           vnet_address_prefixes_cidr: "{{ rhelai_azure_vnet_address_prefixes_cidr }}"
           subnet_address_prefixes_cidr: "{{ rhelai_azure_subnet_address_prefixes_cidr }}"
