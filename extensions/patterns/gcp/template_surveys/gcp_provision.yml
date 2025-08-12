@@ -16,7 +16,7 @@ spec:
 # rhelai_gcp_service_account_file - credentials
 - question_description: GCP image path
   question_name: GCP image
-  required: true
+  required: false
   type: text
   variable: rhelai_gcp_image_path
 - default: myrhelai

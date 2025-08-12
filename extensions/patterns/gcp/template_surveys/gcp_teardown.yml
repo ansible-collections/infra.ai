@@ -1,6 +1,6 @@
 ---
-description: This wizard will guide you on how to provision RHEL AI on GCP
-name: RHEL AI GCP provision
+description: This wizard will guide you on how to teardown RHEL AI on GCP
+name: RHEL AI GCP teardown
 spec:
 - default: us-central1
   question_description: GCP region

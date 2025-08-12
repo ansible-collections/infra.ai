@@ -1,0 +1,30 @@
+---
+short_description: Teardown RHEL AI on GCP
+description: Teardown RHEL AI on GCP
+argument_specs:
+  teardown_infrastructure:
+    short_description: Teardown GCP instance
+    description:
+      - Teardown GCP instance and related resources (firewall rules etc.).
+    options:
+      rhelai_gcp_region:
+        description: GCP region to use
+        type: str
+        required: false
+        default: us-central1
+      rhelai_gcp_resource_name:
+        description: A prefix for names of created GCP resources
+        type: str
+        required: false
+        default: myrhelai
+      rhelai_gcp_project:
+        description: GCP project ID
+        type: str
+        required: true
+    examples: |
+      - import_playbook: run_gcp_teardown.yml
+        vars:
+          rhelai_gcp_region: us-central1
+          rhelai_gcp_resource_name: myrhelai
+          rhelai_gcp_project: my-project-id
+    return: ~
