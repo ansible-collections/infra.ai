@@ -14,9 +14,9 @@
     #   ansible.builtin.debug:
     #     var: groups['all']
 
-- name: Provision infrastructure
-  ansible.builtin.import_playbook: redhat.ai.ilab
-  vars:
-    my_registry_username: "{{ rhelai_ilab_registry_user }}"
-    my_registry_password: "{{ rhelai_ilab_registry_password }}"
-    rhelai_api_token: "{{ rhelai_ilab_api_token: }}"
+# - name: Provision infrastructure
+#   ansible.builtin.import_playbook: redhat.ai.ilab
+#   vars:
+#     my_registry_username: "{{ rhelai_ilab_registry_user }}"
+#     my_registry_password: "{{ rhelai_ilab_registry_password }}"
+#     rhelai_api_token: "{{ rhelai_ilab_api_token: }}"
