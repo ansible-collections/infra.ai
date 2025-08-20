@@ -1,0 +1,166 @@
+{
+    "aap_resources": {
+        "controller_execution_environment":
+            {
+                "credential": "RHEL Infra AI / EE Image Credential",
+                "description": "EE image for running RHEL Infra AI patterns",
+                "image_name": "ghcr.io/justinc1/infra-ai-ee:latest",
+                "name": "infra-ai-ee",
+                "pull": "always"
+            },
+        "controller_labels": [
+            "infra_ai",
+            "infra_pattern",
+            "run_aws_provision",
+            "run_aws_teardown"
+        ],
+        "controller_project": {
+            "credential": "RHEL Infra AI / Credentials",
+            "description": "Project to provision RHEL AI",
+            "name": "RHEL Infra AI / Project",
+            "scm_branch": "patterns",
+            "scm_clean": false,
+            "scm_delete_on_update": true,
+            "scm_type": "git",
+            "scm_update_on_launch": true,
+            "scm_url": "https://github.com/ansible-collections/infra.ai.git"
+        },
+        "controller_job_templates": [
+            {
+                "ask_credential_on_launch": true,
+                "ask_inventory_on_launch": true,
+                "ask_variables_on_launch": false,
+                "description": "This job template provisions RHEL AI on AWS",
+                "execution_environment": "infra-ai-ee",
+                "labels": [
+                    "infra_ai",
+                    "infra_pattern",
+                    "run_aws_provision"
+                ],
+                "name": "RHEL Infra AI / Provision AWS",
+                "playbook": "run_aws_provision.yml",
+                "project": "RHEL Infra AI / Project",
+                "primary": true,
+                "survey_enabled": true,
+                "survey_spec": {
+                    "description": "This wizard will guide you on how to provision RHEL AI on AWS",
+                    "name": "RHEL AI AWS provision",
+                    "spec": [
+                        {
+                            "default": "myRHELAIInstance",
+                            "question_description": "AWS resource name, it is used to generate name for EC2 instance and other related resources.",
+                            "question_name": "AWS resource name",
+                            "required": true,
+                            "type": "text",
+                            "variable": "rhelai_aws_resource_name"
+                        },
+                        {
+                            "default": "us-east-1",
+                            "question_description": "AWS region",
+                            "question_name": "AWS region",
+                            "required": true,
+                            "type": "text",
+                            "variable": "rhelai_aws_aws_region"
+                        },
+                        {
+                            "default": "g6.2xlarge",
+                            "question_description": "Please enter the AWS instance type to use, e.g. 'g6.2xlarge'.",
+                            "question_name": "AWS instance type",
+                            "required": true,
+                            "type": "text",
+                            "variable": "rhelai_aws_instance_type"
+                        },
+                        {
+                            "question_description": "Please enter AWS image AMI to use",
+                            "question_name": "AWS image AMI",
+                            "required": true,
+                            "type": "text",
+                            "variable": "rhelai_aws_rhelai_ami"
+                        },
+                        {
+                            "default": "rhelai-keyname",
+                            "question_description": "Please enter AWS SSH key name to use",
+                            "question_name": "AWS SSH key name",
+                            "required": true,
+                            "type": "text",
+                            "variable": "rhelai_aws_key_name"
+                        },
+                        {
+                            "question_description": "Please enter AWS SSH key material, e.g. content of a public key.",
+                            "question_name": "AWS SSH key material",
+                            "required": true,
+                            "type": "text",
+                            "variable": "rhelai_aws_key_material"
+                        },
+                        {
+                            "default": "10.0.0.0/16",
+                            "question_description": "Please enter AWS VPC CIDR.",
+                            "question_name": "AWS VPC CIDR",
+                            "required": true,
+                            "type": "text",
+                            "variable": "rhelai_aws_vpc_cidr"
+                        },
+                        {
+                            "default": "10.0.1.0/24",
+                            "question_description": "Please enter AWS VPC subnet CIDR.",
+                            "question_name": "AWS VPC subnet CIDR",
+                            "required": true,
+                            "type": "text",
+                            "variable": "rhelai_aws_subnet_cidr"
+                        },
+                        {
+                            "question_description": "Please enter AWS Elastic IP to associate. Leave empty to allocate a new elastic IP.",
+                            "question_name": "AWS Elastic IP",
+                            "required": false,
+                            "type": "text",
+                            "variable": "rhelai_aws_eip"
+                        }
+                    ]
+                }
+            },
+            {
+                "ask_credential_on_launch": true,
+                "ask_inventory_on_launch": true,
+                "ask_variables_on_launch": false,
+                "description": "This job template destroys RHEL AI on AWS",
+                "execution_environment": "infra-ai-ee",
+                "labels": [
+                    "infra_ai",
+                    "infra_pattern",
+                    "run_aws_teardown"
+                ],
+                "name": "RHEL Infra AI / Teardown AWS",
+                "playbook": "run_aws_teardown.yml",
+                "project": "RHEL Infra AI / Project",
+                "survey_enabled": true,
+                "survey_spec": {
+                    "description": "This wizard will guide you on how to teardown RHEL AI on AWS",
+                    "name": "RHEL AI AWS teardown",
+                    "spec": [
+                        {
+                            "default": "myRHELAIInstance",
+                            "question_description": "AWS resource name, it is used to generate name for EC2 instance and other related resources.",
+                            "question_name": "AWS resource name",
+                            "required": true,
+                            "type": "text",
+                            "variable": "rhelai_aws_resource_name"
+                        },
+                        {
+                            "default": "us-east-1",
+                            "question_description": "AWS region",
+                            "question_name": "AWS region",
+                            "required": true,
+                            "type": "text",
+                            "variable": "rhelai_aws_aws_region"
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "description": "RHEL AI AWS pattern",
+    "name": "aws_provision",
+    "schema_version": "0",
+    "short_description": "RHEL AI AWS pattern",
+    "title": "RHEL AI AWS pattern"
+}

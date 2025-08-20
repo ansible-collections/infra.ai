@@ -1,27 +1,36 @@
+# AWS pattern for Ansible infra.ai collection
 
-# Ansible pattern for Red Hat AI in AWS
+## Description
 
-This pattern will deploy a Red Hat AI in AWS.
+The pattern can provision or teardown RHEL AI on AWS.
 
-Some resources need to be prepared before pattern can be run.
-Prepare in AAP:
-- SCM credential for github - PAT token
-  - Follow https://docs.redhat.com/en/documentation/red_hat_ansible_automation_platform/2.5/html/using_ansible_automation_platform_self-service_technology_preview/self-service-using-scm-credentials-private-repos_aap-self-service-using
-  - Used for pre-seeding job template
-  - copy of github PAT token is used to git clone during preseeding.
-- AWS credential
-  - Used when running this pattern
-- Container registry credential
-  - Used to pull EE image
-  - name "RHEL Infra AI / EE Image Credential" (currently exactly this name must be used)
+## Usage
 
-To use this pattern in RHDH:
-- configure RHDH to use https://github.com/justinc1/ansible-rhdh-templates-rhel-ai/blob/develop/seed.yaml
-  This is set in app-config.local.yaml file.
-  - if you are testing [rhdh-local](https://github.com/redhat-developer/rhdh-local), file path is ./configs/app-config/app-config.local.yaml
-  - if using openshift: TODO
-- in RHDH UI, when running preseed template:
-  - use https://github.com/jcinkelj/ansible-pattern-loader, branch rhelai.
-    This in turn will use https://github.com/ansible-collections/infra.ai, branch patterns
+Pattern includes two playbooks:
 
-Example vars to set in RHDH UI:
+- run_aws_provision.yml will provision infrastructure
+- run_aws_teardown.yml will teardown infrustructure.
+
+Parameters are documented in respective `<playbook>.meta.yml` files.
+
+Before running the playbooks AAP needs to be setup with:
+- github.com credential - a token is needed to update AAP project before running it
+  - the pattern is part of https://github.com/ansible-collections/infra.ai,
+    and this is a private repository.
+- container registry credentials - needed to pull EE image
+  - currentlly the credential name must be `RHEL Infra AI / EE Image Credential`
+- SSH private key corresponding to `rhelai_aws_key_material`
+- AWS inventory
+- AWS credentials
+
+## Created AAP resources
+
+Following resources are created:
+
+- `<rhelai_aws_resource_name>-instance` - EC2 instance
+- SSH key pair:
+  - `<rhelai_aws_key_name>` if `rhelai_aws_key_name` is specifed
+  - `<rhelai_aws_resource_name>-key` otherwise
+- `<rhelai_aws_resource_name>-vpc` - VPC
+- `<rhelai_aws_subnet_cidr>` - VPC subnet
+- `<rhelai_aws_resource_name>-sg>` - security group

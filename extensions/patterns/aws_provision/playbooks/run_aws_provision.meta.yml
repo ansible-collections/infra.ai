@@ -1,0 +1,92 @@
+---
+short_description: Provision RHEL AI on AWS
+description: Provision RHEL AI on AWS
+argument_specs:
+  provision_infrastructure:
+    short_description: Create AWS instance
+    description:
+      - Create AWS instance and related resources (firewall rules etc.).
+    options:
+      rhelai_aws_resource_name:
+        default: myRHELAIInstance
+        type: str
+        description: AWS resource name, it is used to generate name for EC2 instance and other related resources.
+        required: true
+      rhelai_aws_aws_region:
+        default: us-east-1
+        type: str
+        description: AWS region
+        required: true
+      rhelai_aws_instance_type:
+        default: g6.2xlarge
+        type: str
+        description: Please enter the AWS instance type to use, e.g. 'g6.2xlarge'.
+        required: true
+      rhelai_aws_rhelai_ami:
+        type: str
+        description: Please enter AWS image AMI to use
+        required: true
+      rhelai_aws_key_name:
+        default: rhelai-keyname
+        type: str
+        description: Please enter AWS SSH key name to use
+        required: true
+      rhelai_aws_key_material:
+        default: rhelai_aws_key_material
+        type: str
+        description: Please enter AWS SSH key material, e.g. content of a public key.
+        required: true
+      rhelai_aws_vpc_cidr:
+        default: 10.0.0.0/16
+        type: str
+        description: Please enter AWS VPC CIDR.
+        required: true
+      rhelai_aws_subnet_cidr:
+        default: 10.0.1.0/24
+        type: str
+        description: rhelai_aws_subnet_cidr
+        required: true
+      rhelai_aws_eip:
+        type: str
+        description: Please enter AWS Elastic IP to associate. Leave empty to allocate a new elastic IP.
+        required: false
+    examples: |
+      - import_playbook: run_aws_provision.yml
+        vars:
+          rhelai_aws_resource_name: myRHELAIInstance
+          rhelai_aws_aws_region: us-east-1
+          rhelai_aws_instance_type: g6.2xlarge
+          rhelai_aws_rhelai_ami: ami-0123456789abcdef0
+          rhelai_aws_key_name: my-personal-rhelai-key
+          rhelai_aws_key_material: ssh-ed25519 AAAAC3N... my-personal-key
+          rhelai_aws_vpc_cidr: 10.0.0.0/16
+          rhelai_aws_subnet_cidr: 10.0.1.0/24
+          rhelai_aws_eip: ""
+          rhelai_ilab_registry_user: username-for-registry.redhat.io
+          rhelai_ilab_registry_password: password-for-registry.redhat.io
+          rhelai_ilab_api_token: mytoken
+    return: ~
+
+  refresh_inventory:
+    short_description: Refresh inventory
+    description:
+      - Refresh inventory to detect newly created AWS instance.
+    options: null
+
+  setup_rhel_ai:
+    short_description: Setup RHEL AI on AWS instance
+    description:
+      - Setup RHEL AI on AWS instance.
+    options:
+      rhelai_ilab_registry_user:
+        description: Username for container image registry (registry.redhat.io)
+        type: str
+        required: true
+      rhelai_ilab_registry_password:
+        description: Passsword for container image registry (registry.redhat.io)
+        type: str
+        required: true
+      rhelai_ilab_api_token:
+        description: API token to set for RHEL AI
+        type: str
+        required: true
