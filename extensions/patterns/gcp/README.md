@@ -14,21 +14,25 @@ Pattern includes two playbooks:
 Parameters are documented in respective `<playbook>.meta.yml` files.
 
 Before running the playbooks AAP needs to be setup with:
-- github.com credential - a token is needed to update AAP project before running it
-  - the pattern is part of https://github.com/ansible-collections/infra.ai,
-    and this is a private repository.
-- container registry credentails - needed to pull EE image
-  - currentlly the credential name must be `RHEL Infra AI / EE Image Credential`
+- build EE image and push it to your private automation hub.
+  Image name needs to be `infra/infra-ai-ee:latest`.
 - SSH private key corresponding to `rhelai_gcp_key_material`
 - GCP inventory
 - GCP credentials
 
 ## Created AAP resources
 
-Created resources are easily identified as the names begin with `<rhelai_gcp_resource_name>` prefix.
-Following resources are created:
+Pattern will create resources in AAP:
 
-- `<rhelai_gcp_resource_name>-instance` - VM instance
-- `<rhelai_gcp_resource_name>-disk` - a VM disk
-- `<rhelai_gcp_resource_name>-network` - a network
-- `<rhelai_gcp_resource_name>-ilab` - a firewall
+- Controller execution environment:
+  - infra-ai-ee
+- Controller labels:
+  - infra_ai
+  - infra_pattern
+  - run_gcp_provision
+  - run_gcp_teardown
+- Controller project
+  - RHEL Infra AI / Project
+- Controller job templates
+  - RHEL Infra AI / Provision GCP
+  - RHEL Infra AI / Teardown GCP

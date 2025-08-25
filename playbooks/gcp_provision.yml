@@ -80,10 +80,6 @@
         labels:
           environment: rhel-ai
           component: llm-serving
-        # scheduling:
-        #   # Instances with GPU cannot MIGRATE
-        #   # e2 instances do not support onHostMaintenance=TERMINATE unless they are preemptible
-        #   on_host_maintenance: TERMINATE
       register: result
 
     - name: Show result of instance creation
