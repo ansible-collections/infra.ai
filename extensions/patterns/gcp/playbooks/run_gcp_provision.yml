@@ -1,0 +1,20 @@
+---
+- name: Provision_infrastructure
+  ansible.builtin.import_playbook: "{{ playbook_dir }}/../../../../playbooks/gcp_provision.yml"
+  vars:
+    rhelai_gcp_key_material: |
+      {{ rhelai_gcp_ansible_user }}:{{ rhelai_gcp_ssh_public_key }}
+
+- name: Refresh_inventory
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Refresh inventory
+      ansible.builtin.meta: refresh_inventory
+
+- name: Setup_rhel_ai
+  ansible.builtin.import_playbook: redhat.ai.ilab
+  vars:
+    my_registry_username: "{{ rhelai_ilab_registry_user }}"
+    my_registry_password: "{{ rhelai_ilab_registry_password }}"
+    rhelai_api_token: "{{ rhelai_ilab_api_token }}"

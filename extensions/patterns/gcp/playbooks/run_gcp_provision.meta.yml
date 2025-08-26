@@ -1,0 +1,84 @@
+---
+# https://github.com/ansible/ansible-creator/blob/main/src/ansible_creator/resources/playbook_project/argspec_validation_plays.meta.yml
+short_description: Provision RHEL AI on GCP
+description: Provision RHEL AI on GCP
+argument_specs:
+  provision_infrastructure:
+    short_description: Create GCP instance
+    description:
+      - Create GCP instance and related resources (firewall rules etc.).
+    options:
+      rhelai_gcp_region:
+        description: GCP region to use
+        type: str
+        required: false
+        default: us-central1
+      rhelai_gcp_resource_name:
+        description: A prefix for names of created GCP resources
+        type: str
+        required: false
+        default: myrhelai
+      rhelai_gcp_ansible_user:
+        description: Username for SSH access to VM instance
+        type: str
+        required: false
+        default: redhat
+      rhelai_gcp_instance_type:
+        description: GCP instance type
+        type: str
+        required: false
+        default: a2-highgpu-1g
+      rhelai_gcp_instance_disk_size_gb:
+        description: VM instance disk size in GB
+        type: int
+        required: false
+        default: 100
+      rhelai_gcp_project:
+        description: GCP project ID
+        type: str
+        required: true
+      rhelai_gcp_image_path:
+        description: GCP image path. This must be an RHEL AI image.
+        type: str
+        required: false
+        default: "projects/{{ rhelai_gcp_project }}/global/images/rhel-ai"
+      rhelai_gcp_ssh_public_key:
+        description: Content of a public SSH key.
+        type: str
+        required: true
+    examples: |
+      - import_playbook: run_gcp_provision.yml
+        vars:
+          rhelai_gcp_region: us-central1
+          rhelai_gcp_resource_name: myrhelai
+          rhelai_gcp_ansible_user: redhat
+          rhelai_gcp_instance_type: a2-highgpu-1g
+          rhelai_gcp_instance_disk_size_gb: 100
+          rhelai_gcp_project: my-project-id
+          rhelai_gcp_image_path: projects/my-project-id/global/images/rhel-ai-v2
+          rhelai_gcp_ssh_public_key: ssh-ed25519 AAAAC3... gcp-ssh-key-test
+    return: ~
+
+  refresh_inventory:
+    short_description: Refresh inventory
+    description:
+      - Refresh inventory to detect newly created GCP instance.
+    options:
+
+  setup_rhel_ai:
+    short_description: Setup RHEL AI on GCP instance
+    description:
+      - Setup RHEL AI on GCP instance.
+    options:
+      rhelai_ilab_registry_user:
+        description: Username for container image registry (registry.redhat.io)
+        type: str
+        required: true
+      rhelai_ilab_registry_password:
+        description: Passsword for container image registry (registry.redhat.io)
+        type: str
+        required: true
+      rhelai_ilab_api_token:
+        description: API token to set for RHEL AI
+        type: str
+        required: true

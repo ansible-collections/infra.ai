@@ -1,0 +1,159 @@
+{
+    "aap_resources": {
+        "controller_execution_environment":
+            {
+                "credential": "RHEL Infra AI / EE Image Credential",
+                "description": "EE image for running RHEL Infra AI patterns",
+                "image_name": "infra/infra-ai-ee:latest",
+                "name": "infra-ai-ee",
+                "pull": "always"
+            },
+        "controller_labels": [
+            "infra_ai",
+            "infra_pattern",
+            "run_gcp_provision",
+            "run_gcp_teardown"
+        ],
+        "controller_project": {
+            "description": "Project to provision RHEL AI",
+            "name": "RHEL Infra AI / Project"
+        },
+        "controller_job_templates": [
+            {
+                "ask_credential_on_launch": true,
+                "ask_inventory_on_launch": true,
+                "ask_variables_on_launch": false,
+                "description": "This job template provisions RHEL AI on GCP",
+                "execution_environment": "infra-ai-ee",
+                "labels": [
+                    "infra_ai",
+                    "infra_pattern",
+                    "run_gcp_provision"
+                ],
+                "name": "RHEL Infra AI / Provision GCP",
+                "playbook": "run_gcp_provision.yml",
+                "project": "RHEL Infra AI / Project",
+                "primary": true,
+                "survey_enabled": true,
+                "survey_spec": {
+                    "description": "This wizard will guide you on how to provision RHEL AI on GCP",
+                    "name": "RHEL AI GCP provision",
+                    "spec": [
+                        {
+                            "default": "us-central1",
+                            "question_description": "GCP region",
+                            "question_name": "GCP region",
+                            "required": false,
+                            "type": "text",
+                            "variable": "rhelai_gcp_region"
+                        },
+                        {
+                            "question_description": "GCP project ID",
+                            "question_name": "GCP project ID",
+                            "required": true,
+                            "type": "text",
+                            "variable": "rhelai_gcp_project"
+                        },
+                        {
+                            "default": "projects/{{ rhelai_gcp_project }}/global/images/rhel-ai",
+                            "question_description": "GCP image path",
+                            "question_name": "GCP image",
+                            "required": false,
+                            "type": "text",
+                            "variable": "rhelai_gcp_image_path"
+                        },
+                        {
+                            "default": "myrhelai",
+                            "question_description": "GCP resource name prefix is used for names of auto-generated resources",
+                            "question_name": "GCP resource name prefix",
+                            "required": false,
+                            "type": "text",
+                            "variable": "rhelai_gcp_resource_name"
+                        },
+                        {
+                            "default": "redhat",
+                            "question_description": "Please enter username for admin user.",
+                            "question_name": "GCP username for admin user",
+                            "required": false,
+                            "type": "text",
+                            "variable": "rhelai_gcp_ansible_user"
+                        },
+                        {
+                            "question_description": "Please enter GCP SSH public key, e.g. content of a public key.",
+                            "question_name": "GCP SSH public key",
+                            "required": true,
+                            "type": "text",
+                            "variable": "rhelai_gcp_ssh_public_key"
+                        },
+                        {
+                            "default": "a2-highgpu-1g",
+                            "question_description": "GCP VM instance type",
+                            "question_name": "GCP instance type",
+                            "required": false,
+                            "type": "text",
+                            "variable": "rhelai_gcp_instance_type"
+                        },
+                        {
+                            "default": 100,
+                            "question_description": "GCP instance disk size",
+                            "question_name": "GCP instance disk size",
+                            "required": false,
+                            "type": "integer",
+                            "variable": "rhelai_gcp_instance_disk_size_gb"
+                        }
+                    ]
+                }
+            },
+            {
+                "ask_credential_on_launch": true,
+                "ask_inventory_on_launch": true,
+                "ask_variables_on_launch": false,
+                "description": "This job template destroys RHEL AI on GCP",
+                "execution_environment": "infra-ai-ee",
+                "labels": [
+                    "infra_ai",
+                    "infra_pattern",
+                    "run_gcp_teardown"
+                ],
+                "name": "RHEL Infra AI / Teardown GCP",
+                "playbook": "run_gcp_teardown.yml",
+                "project": "RHEL Infra AI / Project",
+                "survey_enabled": true,
+                "survey_spec": {
+                    "description": "This wizard will guide you on how to teardown RHEL AI on GCP",
+                    "name": "RHEL AI GCP teardown",
+                    "spec": [
+                        {
+                            "default": "us-central1",
+                            "question_description": "GCP region",
+                            "question_name": "GCP region",
+                            "required": false,
+                            "type": "text",
+                            "variable": "rhelai_gcp_region"
+                        },
+                        {
+                            "question_description": "GCP project ID",
+                            "question_name": "GCP project ID",
+                            "required": true,
+                            "type": "text",
+                            "variable": "rhelai_gcp_project"
+                        },
+                        {
+                            "default": "myrhelai",
+                            "question_description": "GCP resource name prefix is used for names of auto-generated resources",
+                            "question_name": "GCP resource name prefix",
+                            "required": false,
+                            "type": "text",
+                            "variable": "rhelai_gcp_resource_name"
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "description": "RHEL AI GCP pattern",
+    "name": "gcp",
+    "schema_version": "dev",
+    "short_description": "RHEL AI GCP pattern",
+    "title": "RHEL AI GCP pattern"
+}

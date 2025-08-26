@@ -1,0 +1,50 @@
+---
+description: This wizard will guide you on how to provision RHEL AI on GCP
+name: RHEL AI GCP provision
+spec:
+- default: us-central1
+  question_description: GCP region
+  question_name: GCP region
+  required: false
+  type: text
+  variable: rhelai_gcp_region
+- question_description: GCP project ID
+  question_name: GCP project ID
+  required: true
+  type: text
+  variable: rhelai_gcp_project
+# rhelai_gcp_service_account_file - credentials
+- question_description: GCP image path
+  question_name: GCP image
+  required: false
+  type: text
+  variable: rhelai_gcp_image_path
+- default: myrhelai
+  question_description: GCP resource name prefix is used for names of auto-generated resources
+  question_name: GCP resource name prefix
+  required: false
+  type: text
+  variable: rhelai_gcp_resource_name
+- default: redhat
+  question_description: Please enter username for admin user.
+  question_name: GCP username for admin user
+  required: false
+  type: text
+  variable: rhelai_gcp_ansible_user
+- question_description: Please enter GCP SSH public key, e.g. content of a public key.
+  question_name: GCP SSH public key
+  required: true
+  type: text
+  variable: rhelai_gcp_ssh_public_key
+- default: a2-highgpu-1g
+  question_description: GCP VM instance type
+  question_name: GCP instance type
+  required: false
+  type: text
+  variable: rhelai_gcp_instance_type
+- default: 100
+  question_description: GCP instance disk size
+  question_name: GCP instance disk size
+  required: false
+  type: integer
+  variable: rhelai_gcp_instance_disk_size_gb
