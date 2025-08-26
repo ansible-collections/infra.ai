@@ -10,10 +10,6 @@
     - name: Refresh inventory
       ansible.builtin.meta: refresh_inventory
 
-    # - name: Show all inventory hosts
-    #   ansible.builtin.debug:
-    #     var: groups['all']
-
 - name: Setup_rhel_ai
   ansible.builtin.import_playbook: redhat.ai.ilab
   vars:
