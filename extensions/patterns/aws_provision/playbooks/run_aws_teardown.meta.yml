@@ -1,0 +1,25 @@
+---
+short_description: Teardown RHEL AI on AWS
+description: Teardown RHEL AI on AWS
+argument_specs:
+  provision_infrastructure:
+    short_description: Teardown AWS instance
+    description:
+      - Teardown AWS instance and related resources (firewall rules etc.).
+    options:
+      rhelai_aws_resource_name:
+        default: myRHELAIInstance
+        type: str
+        description: AWS resource name, it is used to generate name for EC2 instance and other related resources.
+        required: true
+      rhelai_aws_aws_region:
+        default: us-east-1
+        type: str
+        description: AWS region
+        required: true
+    examples: |
+      - import_playbook: run_aws_teardown.yml
+        vars:
+          rhelai_aws_resource_name: myRHELAIInstance
+          rhelai_aws_aws_region: us-east-1
+    return: ~

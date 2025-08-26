@@ -1,27 +1,38 @@
+# AWS pattern for Ansible infra.ai collection
 
-# Ansible pattern for Red Hat AI in AWS
+## Description
 
-This pattern will deploy a Red Hat AI in AWS.
+The pattern can provision or teardown RHEL AI on AWS.
 
-Some resources need to be prepared before pattern can be run.
-Prepare in AAP:
-- SCM credential for github - PAT token
-  - Follow https://docs.redhat.com/en/documentation/red_hat_ansible_automation_platform/2.5/html/using_ansible_automation_platform_self-service_technology_preview/self-service-using-scm-credentials-private-repos_aap-self-service-using
-  - Used for pre-seeding job template
-  - copy of github PAT token is used to git clone during preseeding.
-- AWS credential
-  - Used when running this pattern
-- Container registry credential
-  - Used to pull EE image
-  - name "RHEL Infra AI / EE Image Credential" (currently exactly this name must be used)
+## Usage
 
-To use this pattern in RHDH:
-- configure RHDH to use https://github.com/justinc1/ansible-rhdh-templates-rhel-ai/blob/develop/seed.yaml
-  This is set in app-config.local.yaml file.
-  - if you are testing [rhdh-local](https://github.com/redhat-developer/rhdh-local), file path is ./configs/app-config/app-config.local.yaml
-  - if using openshift: TODO
-- in RHDH UI, when running preseed template:
-  - use https://github.com/jcinkelj/ansible-pattern-loader, branch rhelai.
-    This in turn will use https://github.com/ansible-collections/infra.ai, branch patterns
+Pattern includes two playbooks:
 
-Example vars to set in RHDH UI:
+- run_aws_provision.yml will provision infrastructure
+- run_aws_teardown.yml will teardown infrustructure.
+
+Parameters are documented in respective `<playbook>.meta.yml` files.
+
+Before running the playbooks AAP needs to be setup with:
+- build EE image and push it to your private automation hub.
+  Image name needs to be `infra/infra-ai-ee:latest`.
+- SSH private key corresponding to `rhelai_aws_key_material`
+- AWS inventory
+- AWS credentials
+
+## Created AAP resources
+
+Pattern will create resources in AAP:
+
+- Controller execution environment:
+  - infra-ai-ee
+- Controller labels:
+  - infra_ai
+  - infra_pattern
+  - run_aws_provision
+  - run_aws_teardown
+- Controller project
+  - RHEL Infra AI / Project
+- Controller job templates
+  - RHEL Infra AI / Provision AWS
+  - RHEL Infra AI / Teardown AWS
