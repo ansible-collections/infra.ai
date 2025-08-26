@@ -1,0 +1,108 @@
+---
+short_description: Provision RHEL AI on Azure
+description: Provision RHEL AI on Azure
+argument_specs:
+  provision_infrastructure:
+    short_description: Create Azure instance
+    description:
+      - Create Azure instance and related resources (firewall rules etc.).
+    options:
+      rhelai_azure_region:
+        description: Azure region
+        type: str
+        required: false
+        default: eastus
+      rhelai_azure_resource_group_name:
+        description: Azure resource group name
+        type: str
+        required: true
+      rhelai_azure_tags:
+        description: Azure tags
+        type: str
+        required: false
+        default: "{\"Environment\":\"RHEL-AI\",\"Component\":\"LLM-Serving\"}"
+      rhelai_azure_vm_name:
+        description: Azure VM name
+        type: str
+        required: false
+        default: myrhelai
+      rhelai_azure_vm_size:
+        description: Azure VM size. Note - GPU count from VM size must not exceed what image SKU provides.
+        type: str
+        required: false
+        default: Standard_ND6as_A100_v4
+      rhelai_azure_image_sku:
+        description: Azure VM image SKU. Note - GPU count from VM size must not exceed what image SKU provides.
+        type: str
+        required: false
+        default: rh-rhelai-nvidia-1gpu
+      rhelai_azure_vnet_address_prefixes_cidr:
+        description: Please enter Azure Vnet CIDR.
+        type: str
+        required: false
+        default: 10.0.0.0/16
+      rhelai_azure_subnet_address_prefixes_cidr:
+        description: Please enter Azure subnet CIDR.
+        type: str
+        required: false
+        default: 10.0.1.0/24
+      rhelai_azure_admin_username:
+        description: Please enter username for admin user.
+        type: str
+        required: false
+        default: redhat
+      rhelai_azure_ssh_keys:
+        description: Please configure SSH key access to Azure VM.
+        type: str
+        required: true
+        default: |
+          - path: /home/redhat/.ssh/authorized_keys
+            key_data: ssh-ed25519 AAAAC3N... ssh-key-comment
+      rhelai_azure_managed_disk_type:
+        description: Please enter Azure Disk type.
+        type: str
+        required: false
+        default: Standard_LRS
+    examples: |
+      - import_playbook: run_azure_provision.yml
+        vars:
+          rhelai_azure_region: eastus
+          rhelai_azure_resource_group_name: myRHELAI
+          rhelai_azure_tags: '{"Environment":"RHEL-AI","Component":"LLM-Serving"}'
+          rhelai_azure_vm_name: myVM
+          rhelai_azure_vm_size: Standard_ND6as_A100_v4
+          rhelai_azure_image_sku: rh-rhelai-nvidia-1gpu
+          rhelai_azure_vnet_address_prefixes_cidr: 10.0.0.0/16
+          rhelai_azure_subnet_address_prefixes_cidr: 10.0.1.0/24
+          rhelai_azure_admin_username: redhat
+          rhelai_azure_ssh_keys: |
+            - path: /home/redhat/.ssh/authorized_keys
+              key_data: ssh-ed25519 AAAAC3N... ssh-key-comment
+          rhelai_azure_managed_disk_type: Standard_LRS
+    return: ~
+
+  refresh_inventory:
+    short_description: Refresh inventory
+    description:
+      - Refresh inventory to detect newly created Azure instance.
+    options: {}
+    examples: ""
+
+  setup_rhel_ai:
+    short_description: Setup RHEL AI on Azure instance
+    description:
+      - Setup RHEL AI on Azure instance.
+    options:
+      rhelai_ilab_registry_user:
+        description: Username for container image registry (registry.redhat.io)
+        type: str
+        required: true
+      rhelai_ilab_registry_password:
+        description: Passsword for container image registry (registry.redhat.io)
+        type: str
+        required: true
+      rhelai_ilab_api_token:
+        description: API token to set for RHEL AI
+        type: str
+        required: true
+    examples: ""

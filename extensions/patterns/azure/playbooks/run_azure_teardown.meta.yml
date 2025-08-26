@@ -1,0 +1,31 @@
+---
+short_description: Teardown RHEL AI on Azure
+description: Teardown RHEL AI on Azure
+argument_specs:
+  provision_infrastructure:
+    short_description: Teardown Azure instance
+    description:
+      - Teardown Azure instance and related resources (firewall rules etc.).
+    options:
+      rhelai_azure_region:
+        description: Azure region
+        type: str
+        required: false
+        default: eastus
+      rhelai_azure_resource_group_name:
+        description: Azure resource group name
+        type: str
+        required: true
+      rhelai_azure_vm_name:
+        description: Azure VM name
+        type: str
+        required: false
+        default: myrhelai
+
+    examples: |
+      - import_playbook: run_azure_teardown.yml
+        vars:
+          rhelai_azure_region: eastus
+          rhelai_azure_resource_group_name: myRHELAI
+          rhelai_azure_vm_name: myVM
+    return: ~

@@ -1,0 +1,184 @@
+{
+    "aap_resources": {
+        "controller_execution_environment":
+            {
+                "credential": "RHEL Infra AI / EE Image Credential",
+                "description": "EE image for running RHEL Infra AI patterns",
+                "image_name": "infra/infra-ai-ee:latest",
+                "name": "infra-ai-ee",
+                "pull": "always"
+            },
+        "controller_labels": [
+            "infra_ai",
+            "infra_pattern",
+            "run_azure_provision",
+            "run_azure_teardown"
+        ],
+        "controller_project": {
+            "description": "Project to provision RHEL AI",
+            "name": "RHEL Infra AI / Project"
+        },
+        "controller_job_templates": [
+            {
+                "ask_credential_on_launch": true,
+                "ask_inventory_on_launch": true,
+                "ask_variables_on_launch": false,
+                "description": "This job template provisions RHEL AI on Azure",
+                "execution_environment": "infra-ai-ee",
+                "labels": [
+                    "infra_ai",
+                    "infra_pattern",
+                    "run_azure_provision"
+                ],
+                "name": "RHEL Infra AI / Provision Azure",
+                "playbook": "run_azure_provision.yml",
+                "project": "RHEL Infra AI / Project",
+                "primary": true,
+                "survey_enabled": true,
+                "survey_spec": {
+                    "description": "This wizard will guide you on how to provision RHEL AI on Azure",
+                    "name": "RHEL AI Azure provision",
+                    "spec": [
+                        {
+                            "default": "eastus",
+                            "question_description": "Azure region",
+                            "question_name": "Azure region",
+                            "required": false,
+                            "type": "text",
+                            "variable": "rhelai_azure_region"
+                        },
+                        {
+                            "question_description": "Azure resource group name",
+                            "question_name": "Azure resource group name",
+                            "required": true,
+                            "type": "text",
+                            "variable": "rhelai_azure_resource_group_name"
+                        },
+                        {
+                            "default": "{\"Environment\":\"RHEL-AI\",\"Component\":\"LLM-Serving\"}",
+                            "question_description": "Azure tags",
+                            "question_name": "Azure tags",
+                            "required": false,
+                            "type": "text",
+                            "variable": "rhelai_azure_tags"
+                        },
+                        {
+                            "default": "myrhelai",
+                            "question_description": "Azure VM name",
+                            "question_name": "Azure VM name",
+                            "required": false,
+                            "type": "text",
+                            "variable": "rhelai_azure_vm_name"
+                        },
+                        {
+                            "default": "Standard_ND6as_A100_v4",
+                            "question_description": "Azure VM size. Note - GPU count from VM size must not exceed what image SKU provides.",
+                            "question_name": "Azure VM size",
+                            "required": false,
+                            "type": "text",
+                            "variable": "rhelai_azure_vm_size"
+                        },
+                        {
+                            "default": "rh-rhelai-nvidia-1gpu",
+                            "question_description": "Azure VM image SKU. Note - GPU count from VM size must not exceed what image SKU provides.",
+                            "question_name": "Azure VM image SKU",
+                            "required": false,
+                            "type": "text",
+                            "variable": "rhelai_azure_image_sku"
+                        },
+                        {
+                            "default": "10.0.0.0/16",
+                            "question_description": "Please enter Azure Vnet CIDR.",
+                            "question_name": "Azure Vnet CIDR",
+                            "required": false,
+                            "type": "text",
+                            "variable": "rhelai_azure_vnet_address_prefixes_cidr"
+                        },
+                        {
+                            "default": "10.0.1.0/24",
+                            "question_description": "Please enter Azure subnet CIDR.",
+                            "question_name": "Azure subnet CIDR",
+                            "required": false,
+                            "type": "text",
+                            "variable": "rhelai_azure_subnet_address_prefixes_cidr"
+                        },
+                        {
+                            "default": "redhat",
+                            "question_description": "Please enter username for admin user.",
+                            "question_name": "Azure username for admin user",
+                            "required": false,
+                            "type": "text",
+                            "variable": "rhelai_azure_admin_username"
+                        },
+                        {
+                            "default": "- path: /home/redhat/.ssh/authorized_keys\n  key_data: ssh-ed25519 AAAAC3N... ssh-key-comment",
+                            "question_description": "Please configure SSH key access to Azure VM.",
+                            "question_name": "Azure SSH access",
+                            "required": true,
+                            "type": "text",
+                            "variable": "rhelai_azure_ssh_keys"
+                        },
+                        {
+                            "default": "Standard_LRS",
+                            "question_description": "Please enter Azure Disk type.",
+                            "question_name": "Azure Disk type",
+                            "required": false,
+                            "type": "text",
+                            "variable": "rhelai_azure_managed_disk_type"
+                        }
+                    ]
+                }
+            },
+            {
+                "ask_credential_on_launch": true,
+                "ask_inventory_on_launch": true,
+                "ask_variables_on_launch": false,
+                "description": "This job template destroys RHEL AI on Azure",
+                "execution_environment": "infra-ai-ee",
+                "labels": [
+                    "infra_ai",
+                    "infra_pattern",
+                    "run_azure_teardown"
+                ],
+                "name": "RHEL Infra AI / Teardown Azure",
+                "playbook": "run_azure_teardown.yml",
+                "project": "RHEL Infra AI / Project",
+                "survey_enabled": true,
+                "survey_spec": {
+                    "description": "This wizard will guide you on how to teardown RHEL AI on Azure",
+                    "name": "RHEL AI Azure teardown",
+                    "spec": [
+                        {
+                            "default": "eastus",
+                            "question_description": "Azure region",
+                            "question_name": "Azure region",
+                            "required": false,
+                            "type": "text",
+                            "variable": "rhelai_azure_region"
+                        },
+                        {
+                            "question_description": "Azure resource group name",
+                            "question_name": "Azure resource group name",
+                            "required": true,
+                            "type": "text",
+                            "variable": "rhelai_azure_resource_group_name"
+                        },
+                        {
+                            "default": "myrhelai",
+                            "question_description": "Azure VM name",
+                            "question_name": "Azure VM name",
+                            "required": false,
+                            "type": "text",
+                            "variable": "rhelai_azure_vm_name"
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "description": "RHEL AI Azure pattern",
+    "name": "azure",
+    "schema_version": "dev",
+    "short_description": "RHEL AI Azure pattern",
+    "title": "RHEL AI Azure pattern"
+}
