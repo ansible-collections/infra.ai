@@ -4,7 +4,7 @@
             {
                 "credential": "RHEL Infra AI / EE Image Credential",
                 "description": "EE image for running RHEL Infra AI patterns",
-                "image_name": "ghcr.io/justinc1/infra-ai-ee:latest",
+                "image_name": "infra/infra-ai-ee:latest",
                 "name": "infra-ai-ee",
                 "pull": "always"
             },
@@ -15,15 +15,8 @@
             "run_aws_teardown"
         ],
         "controller_project": {
-            "credential": "RHEL Infra AI / Credentials",
             "description": "Project to provision RHEL AI",
-            "name": "RHEL Infra AI / Project",
-            "scm_branch": "patterns",
-            "scm_clean": false,
-            "scm_delete_on_update": true,
-            "scm_type": "git",
-            "scm_update_on_launch": true,
-            "scm_url": "https://github.com/ansible-collections/infra.ai.git"
+            "name": "RHEL Infra AI / Project"
         },
         "controller_job_templates": [
             {
@@ -160,7 +153,7 @@
     },
     "description": "RHEL AI AWS pattern",
     "name": "aws_provision",
-    "schema_version": "0",
+    "schema_version": "dev",
     "short_description": "RHEL AI AWS pattern",
     "title": "RHEL AI AWS pattern"
 }

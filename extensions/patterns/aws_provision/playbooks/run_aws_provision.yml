@@ -19,4 +19,4 @@
   vars:
     my_registry_username: "{{ rhelai_ilab_registry_user }}"
     my_registry_password: "{{ rhelai_ilab_registry_password }}"
-    rhelai_api_token: "{{ rhelai_ilab_api_token: }}"
+    rhelai_api_token: "{{ rhelai_ilab_api_token }}"

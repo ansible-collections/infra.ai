@@ -71,7 +71,9 @@ argument_specs:
     short_description: Refresh inventory
     description:
       - Refresh inventory to detect newly created AWS instance.
-    options: null
+    options: {}
+    examples: ""
+    return: ~
 
   setup_rhel_ai:
     short_description: Setup RHEL AI on AWS instance
@@ -90,3 +92,5 @@ argument_specs:
         description: API token to set for RHEL AI
         type: str
         required: true
+    examples: ""
+    return: ~
