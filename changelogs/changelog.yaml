@@ -8,3 +8,10 @@ releases:
         name: baremetal_iso
         namespace: null
     release_date: '2025-07-16'
+  1.2.0:
+    changes:
+      release_summary: This release introduces several new patterns for AWS, Azure,
+        and GCP.
+    fragments:
+    - release_summary.yml
+    release_date: '2025-09-05'
