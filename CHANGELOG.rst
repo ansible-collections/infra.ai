@@ -4,6 +4,14 @@ infra.ai Release Notes
 
 .. contents:: Topics
 
+v1.2.0
+======
+
+Release Summary
+---------------
+
+This release introduces several new patterns for AWS, Azure, and GCP.
+
 v1.1.0
 ======
 

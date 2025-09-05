@@ -1,0 +1,9 @@
+---
+profile: production
+exclude_paths:
+  - .ansible/
+  - .github/
+  - tests/integration
+  - extensions/patterns/aws_provision/playbooks/run_aws_provision.yml
+  - extensions/patterns/azure/playbooks/run_azure_provision.yml
+  - extensions/patterns/gcp/playbooks/run_gcp_provision.yml
