@@ -16,5 +16,12 @@ jobs:
     steps:
       - uses: ansible-network/github_actions/.github/actions/checkout_dependency@main
 
+      - name: install redhat.ai
+        env:
+          ANSIBLE_AUTOMATION_HUB_TOKEN: ${{ secrets.ANSIBLE_AUTOMATION_HUB_TOKEN }}
+        run: |
+          envsubst <ansible.cfg.template >ansible.cfg
+          ansible-galaxy --version
+          ansible-galaxy collection install redhat.ai
       - name: run-ansible-lint
         uses: ansible/ansible-lint@v25.1.2

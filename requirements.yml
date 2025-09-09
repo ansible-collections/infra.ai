@@ -11,3 +11,4 @@ collections:
   - name: https://github.com/redhat-cop/cloud.azure_ops
     type: git
     version: main  # >5.0.0
+  - redhat.ai

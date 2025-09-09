@@ -1,3 +1,4 @@
+ansible.cfg
 /tests/output/
 /changelogs/.plugin-cache.yaml
 
