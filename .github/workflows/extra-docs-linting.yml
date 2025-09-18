@@ -32,6 +32,12 @@ jobs:
         run: pip install ansible-core antsibull-docs --disable-pip-version-check
 
       # OPTIONAL If your collection depends on other collections, make sure to install them here
+      - name: Setup ansible.cfg for certified collections from automation hub
+        env:
+          ANSIBLE_AUTOMATION_HUB_TOKEN: ${{ secrets.ANSIBLE_AUTOMATION_HUB_TOKEN }}
+        run: |
+          envsubst <ansible.cfg.template >ansible.cfg
+          ansible-galaxy --version
       - name: Install dependent collections
         run: ansible-galaxy collection install -r requirements.yml
 
